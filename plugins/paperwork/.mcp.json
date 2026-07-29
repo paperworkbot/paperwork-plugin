@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "paperwork": {
+      "type": "http",
+      "url": "${PAPERWORK_MCP_URL:-https://paperwork.bot/mcp}",
+      "headers": {
+        "Authorization": "Bearer ${PAPERWORK_MCP_TOKEN}"
+      }
+    }
+  }
+}

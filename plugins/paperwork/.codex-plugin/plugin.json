@@ -1,0 +1,37 @@
+{
+  "name": "paperwork",
+  "version": "0.1.0",
+  "description": "Work your Paperwork queue from your own agent: triage what needs attention, investigate and resolve tasks, review contact history, and check whether documents already exist — over the Paperwork MCP connection.",
+  "author": {
+    "name": "Paperwork",
+    "url": "https://paperwork.bot"
+  },
+  "homepage": "https://paperwork.bot",
+  "repository": "https://github.com/paperworkbot/paperwork-plugin",
+  "license": "MIT",
+  "keywords": [
+    "paperwork",
+    "documents",
+    "workflow",
+    "tasks",
+    "triage",
+    "contacts",
+    "reconciliation"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Paperwork",
+    "shortDescription": "Triage and work your Paperwork queue",
+    "longDescription": "Connects your agent to Paperwork so it can triage your task queue, investigate workflows and documents, check whether a document already exists, review contact history, and resolve tasks on your behalf — always as you, within your Paperwork permissions.",
+    "developerName": "Paperwork",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://paperwork.bot",
+    "defaultPrompt": [
+      "What needs my attention in Paperwork?"
+    ]
+  }
+}

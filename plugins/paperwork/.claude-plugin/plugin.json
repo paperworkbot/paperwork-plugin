@@ -1,0 +1,12 @@
+{
+  "name": "paperwork",
+  "description": "Work your Paperwork queue from your own agent: triage what needs attention, investigate and resolve tasks, review contact history, and check whether documents already exist — over the Paperwork MCP connection.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Paperwork",
+    "url": "https://paperwork.bot"
+  },
+  "homepage": "https://paperwork.bot",
+  "repository": "https://github.com/paperworkbot/paperwork-plugin",
+  "license": "MIT"
+}

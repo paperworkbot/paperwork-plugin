@@ -1,0 +1,16 @@
+{
+  "name": "paperwork",
+  "description": "Connect your coding agent to Paperwork: triage your queue, investigate workflows and documents, and resolve tasks as you, within your permissions.",
+  "owner": {
+    "name": "Paperwork",
+    "url": "https://paperwork.bot"
+  },
+  "plugins": [
+    {
+      "name": "paperwork",
+      "source": "./plugins/paperwork",
+      "description": "Triage and work your Paperwork queue from your own agent over MCP.",
+      "category": "productivity"
+    }
+  ]
+}

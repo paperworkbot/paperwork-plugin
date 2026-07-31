@@ -1,54 +1,55 @@
 ---
 name: paperwork-document-lookup
-description: Check whether a document already exists in Paperwork and how far it has progressed, over the Paperwork MCP connection. Use when the user asks "does <identifier> exist", "have we seen this document", "was this already processed", "is this a duplicate", or before entering or acting on a document. Read-only.
+description: Check whether one or many business document identifiers already exist in Paperwork and how far each has progressed. Use for duplicate checks, invoice or statement reconciliation, prior-seen questions, batch identifier checks, and existence verification before intake or action. Read-only.
 ---
 
-# Document Lookup
+# Paperwork Document Lookup
 
-Answer "have we seen this before, and where does it stand?" — the question
-behind duplicate checks, reconciliation, and reviewing a document reference
-someone sent in. Works for any document type Paperwork tracks; the identifier
-is whatever business reference the document carries.
-
-Requires the Paperwork MCP server (tools named like
-`paperworks_find_by_identifier`).
+Answer whether the identifiers exist and distinguish exact evidence from
+approximate matches.
 
 ## Procedure
 
-1. Call `paperworks_find_by_identifier` with:
-   - `paperwork_type` — the kind of document the user is checking.
-   - `identifier` — **verbatim, punctuation and all**, exactly as it appears
-     on the document. The matcher handles separator, spacing, and zero-padding
-     differences itself.
-2. Interpret the result by its `reconciliation_status_hint`:
-   - **`missing`** — no record. Safe to treat as new. Offer a fallback
-     `paperworks_search` on a fragment in case the identifier was extracted
-     differently.
-   - **`matched`** — one match. Report the paperwork reference, its state and
-     resolution, and the owning workflow's reference and state.
-   - **`on_hold`** — it exists but its workflow is on hold. Say why it might
-     be stuck and offer `processes_history` on that workflow.
-   - **`duplicate`** — multiple candidates. List every candidate with its
-     workflow; warn about the risk of acting on the same document twice; never
-     silently pick one.
-3. Check `match_kind` on each match. Anything flagged approximate
-   (zero-padding, trimmed affixes, long-prefix) is a **probable** match, not a
-   confirmation — say so explicitly, and show the matched key so the user can
-   judge.
-4. When the user wants detail on a match, `context_get` and
-   `processes_history` on its workflow tell the rest of the story.
+1. If the paperwork type key is unknown, call `account_describe` and use an
+   exact standard or custom type key.
+2. Preserve identifiers verbatim, including punctuation, spacing, and leading
+   zeros.
+3. Call `paperworks_find_by_identifier` with:
+   - `paperwork_type`;
+   - one `identifier`, or `identifiers` containing up to 25 values;
+   - an optional `identifier_kind`; and
+   - account scope unless the user explicitly asks for agent scope.
+4. Interpret each `reconciliation_status_hint`:
+   - `missing`: no authorized match;
+   - `matched`: one credible match;
+   - `on_hold`: a match whose workflow needs attention;
+   - `duplicate`: multiple candidates that must remain distinct.
+5. Inspect `match_kind`. Treat zero-padding, affix trimming, prefix, and other
+   approximate matches as probable, never definitive.
+6. For more detail:
+   - `paperworks_get` for each selected document dossier;
+   - `processes_history` for why a workflow is held or unresolved; or
+   - `paperworks_search` as a bounded fallback when an identifier may have been
+     extracted differently.
 
 ## Output
 
-One direct sentence first — "yes, that identifier exists as PW-187 on workflow
-WF-202, closed as processed" or "no record of that identifier" — then the
-supporting detail. For duplicates, a short candidate table with references,
-states, and match kinds.
+For one identifier, lead with a direct yes/no/probable answer. For batches,
+return a compact table with:
+
+- queried identifier;
+- reconciliation hint;
+- matched paperwork and workflow references;
+- states and resolution; and
+- match kind or ambiguity.
+
+List every duplicate candidate. Never silently select one.
 
 ## Rules
 
-- Read-only. This skill never creates, closes, or reprocesses anything.
-- Preserve the user's identifier exactly in the lookup; show both the queried
-  and the matched form when they differ.
-- An approximate match is evidence, not proof. Do not tell the user a document
-  "definitely exists" on an approximate match kind.
+- Read-only. Never create, close, mark duplicate, or reprocess paperwork.
+- "Missing" means no authorized match was returned; do not imply global
+  nonexistence outside the user's view.
+- An approximate match is evidence for review, not proof.
+- Route requested document changes to
+  [paperwork-document-management](../paperwork-document-management/SKILL.md).

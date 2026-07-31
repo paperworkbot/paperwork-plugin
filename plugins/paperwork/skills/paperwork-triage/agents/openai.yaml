@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Triage"
+  short_description: "Prioritize your Paperwork task queue"
+  default_prompt: "Use $paperwork-triage to show me what needs attention in Paperwork."

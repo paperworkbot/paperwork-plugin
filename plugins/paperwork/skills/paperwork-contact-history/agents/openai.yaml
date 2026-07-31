@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Contact History"
+  short_description: "Review one contact's Paperwork history"
+  default_prompt: "Use $paperwork-contact-history to review this contact relationship in Paperwork."

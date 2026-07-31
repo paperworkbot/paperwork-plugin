@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork"
+  short_description: "Route and manage Paperwork work"
+  default_prompt: "Use $paperwork to help me manage my Paperwork account safely."

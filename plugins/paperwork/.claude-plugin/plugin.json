@@ -1,7 +1,7 @@
 {
   "name": "paperwork",
-  "description": "Work your Paperwork queue from your own agent: triage what needs attention, investigate and resolve tasks, review contact history, and check whether documents already exist — over the Paperwork MCP connection.",
-  "version": "0.1.0",
+  "description": "Operate your Paperwork account from a local agent: triage queues, manage tasks and workflows, investigate contacts and documents, intake files, and resolve paperwork through a permission-scoped MCP connection.",
+  "version": "0.2.0",
   "author": {
     "name": "Paperwork",
     "url": "https://paperwork.bot"

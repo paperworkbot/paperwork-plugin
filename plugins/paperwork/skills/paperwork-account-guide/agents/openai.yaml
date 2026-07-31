@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Account Guide"
+  short_description: "Discover account vocabulary and scope"
+  default_prompt: "Use $paperwork-account-guide to explain the available Paperwork types, states, roles, and agents."

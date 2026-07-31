@@ -1,6 +1,6 @@
 {
   "name": "paperwork",
-  "description": "Connect your coding agent to Paperwork: triage your queue, investigate workflows and documents, and resolve tasks as you, within your permissions.",
+  "description": "Operate Paperwork from Claude Code, Codex, or OpenCode: triage queues, manage workflows and tasks, intake files, and resolve documents through permission-scoped MCP.",
   "owner": {
     "name": "Paperwork",
     "url": "https://paperwork.bot"
@@ -9,7 +9,7 @@
     {
       "name": "paperwork",
       "source": "./plugins/paperwork",
-      "description": "Triage and work your Paperwork queue from your own agent over MCP.",
+      "description": "Manage the operational work in your Paperwork account from a local agent over MCP.",
       "category": "productivity"
     }
   ]

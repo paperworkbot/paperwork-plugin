@@ -1,0 +1,26 @@
+name: Validate plugin
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the distribution
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Validate manifests, skills, and capability coverage
+        run: ruby scripts/validate-plugin.rb
+      - name: Exercise the OpenCode installer
+        run: |
+          destination="$RUNNER_TEMP/paperwork-opencode/skills"
+          scripts/install-opencode.sh --destination "$destination"
+          for source in plugins/paperwork/skills/*; do
+            test -f "$source/SKILL.md" || continue
+            diff -ru "$source" "$destination/$(basename "$source")"
+          done

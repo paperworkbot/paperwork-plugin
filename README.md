@@ -1,50 +1,91 @@
 # Paperwork Plugin
 
-Connect your coding agent — Claude Code or Codex — to [Paperwork](https://paperwork.bot):
-triage your queue, investigate workflows and documents, review contact
-history, and resolve tasks, always as you and within your Paperwork
-permissions.
+Operate [Paperwork](https://paperwork.bot) from Claude Code, Codex, or
+OpenCode. The plugin gives a local agent safe procedures for account
+discovery, queue triage, tasks, workflows, contacts, document intake,
+document investigation, and paperwork resolution over Paperwork's
+permission-scoped MCP server.
+
+Every call runs as the user bound to the API token, within both that user's
+current Paperwork permissions and the token's capability ceiling.
 
 ## Install
 
-**Claude Code**
+### Claude Code
 
 ```text
 /plugin marketplace add paperworkbot/paperwork-plugin
 /plugin install paperwork@paperwork
 ```
 
-**Codex**
+Set `PAPERWORK_MCP_TOKEN` and, for a self-hosted deployment,
+`PAPERWORK_MCP_URL`. Run `/reload-plugins` or start a new session.
+
+### Codex
 
 ```sh
 codex plugin marketplace add paperworkbot/paperwork-plugin
 codex plugin add paperwork@paperwork
+codex mcp add paperwork \
+  --url "$PAPERWORK_MCP_URL" \
+  --bearer-token-env-var PAPERWORK_MCP_TOKEN
 ```
 
-Then set your connection (a `pwcap_...` token from **Setup -> API Access** in
-Paperwork; the URL only if self-hosted):
+Start a new Codex task after installation.
+
+### OpenCode
+
+Clone this repository, install the portable Agent Skills, and merge the MCP
+example into your OpenCode configuration:
 
 ```sh
-export PAPERWORK_MCP_TOKEN="pwcap_..."
-export PAPERWORK_MCP_URL="https://<your-host>/mcp"   # omit on managed cloud
+./scripts/install-opencode.sh
 ```
 
-Restart your agent and say **"set up paperwork"** to verify the connection.
+See [`opencode.example.jsonc`](opencode.example.jsonc). OpenCode reads the
+token from the process environment; never paste it into the configuration
+file.
 
-## What's inside
+## Connect securely
 
-| Skill | What it does |
+Create a personal token under **Setup -> API Access** in Paperwork with the
+`mcp` audience and only the capabilities needed for your work. Tokens are
+shown once and begin with `pwcap_`.
+
+Prefer an OS credential manager or a silent prompt that populates the client
+process environment. For one temporary zsh session:
+
+```sh
+read -s "PAPERWORK_MCP_TOKEN?Paperwork token: "; echo
+export PAPERWORK_MCP_TOKEN
+export PAPERWORK_MCP_URL="https://your-paperwork-host.example/mcp"
+```
+
+Managed-cloud users can omit `PAPERWORK_MCP_URL`; the bundled Claude
+connection defaults to `https://paperwork.bot/mcp`.
+
+The token limits operations, not records. Use a dedicated non-admin Paperwork
+user when possible: account-scoped capabilities can reach everything that
+user is currently allowed to see.
+
+## What is included
+
+| Skill | Responsibility |
 | --- | --- |
-| `paperwork-triage` | "What needs my attention?" — surveys and prioritizes your queue. Read-only. |
-| `paperwork-task-work` | Investigates one task, proposes an action with evidence, acts only after you confirm. |
-| `paperwork-contact-history` | The full picture of one contact: open work, history, flags. Read-only. |
-| `paperwork-document-lookup` | "Have we seen this document, and where does it stand?" Read-only. |
-| `paperwork-setup` | Connects or repairs the MCP link. |
+| `paperwork` | Routes broad requests and mixed workflows |
+| `paperwork-setup` | Installs, connects, diagnoses, rotates, and removes |
+| `paperwork-account-guide` | Discovers account vocabulary and allowed values |
+| `paperwork-triage` | Prioritizes personal, role, and held task queues |
+| `paperwork-task-work` | Investigates and operates one task end to end |
+| `paperwork-process-management` | Searches, creates, annotates, messages, and changes workflows |
+| `paperwork-document-management` | Searches, inspects, reads, downloads, resolves, and reprocesses paperwork |
+| `paperwork-intake` | Creates a workflow, assigns contacts, uploads files, and verifies processing |
+| `paperwork-contact-history` | Reviews one counterparty relationship |
+| `paperwork-document-lookup` | Reconciles one or many document identifiers |
 
-See [plugins/paperwork/README.md](plugins/paperwork/README.md) for the token
-capabilities each skill needs, so an administrator can grant exactly as much
-as you use.
+The current release intentionally covers all 32 operations exposed by the
+Paperwork MCP capability catalog. It does not administer accounts, users,
+agents, custom tasks, integrations, secrets, or arbitrary code.
 
-The plugin contains no credentials. Your API token is bound to your Paperwork
-user, can be revoked at any time, and its capability ceiling is the hard limit
-on what your agent can do — regardless of what it is asked.
+See [`plugins/paperwork/README.md`](plugins/paperwork/README.md) for capability
+profiles, safety boundaries, updates, and removal.

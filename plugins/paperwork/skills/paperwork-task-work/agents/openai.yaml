@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Task Work"
+  short_description: "Investigate and resolve one Paperwork task"
+  default_prompt: "Use $paperwork-task-work to investigate and handle this Paperwork task."

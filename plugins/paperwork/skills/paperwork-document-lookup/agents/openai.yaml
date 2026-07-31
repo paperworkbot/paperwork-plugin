@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Document Lookup"
+  short_description: "Check identifiers and duplicate status"
+  default_prompt: "Use $paperwork-document-lookup to check whether these document identifiers already exist."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Document Management"
+  short_description: "Inspect and manage paperwork documents"
+  default_prompt: "Use $paperwork-document-management to find, inspect, or manage paperwork documents."

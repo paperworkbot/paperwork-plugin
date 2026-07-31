@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Intake"
+  short_description: "Create workflows and upload documents"
+  default_prompt: "Use $paperwork-intake to start a workflow and add paperwork safely."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Process Management"
+  short_description: "Create and operate Paperwork workflows"
+  default_prompt: "Use $paperwork-process-management to inspect or manage a Paperwork workflow."

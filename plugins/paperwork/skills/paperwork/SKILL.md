@@ -3,10 +3,10 @@ name: paperwork
 description: Route and coordinate comprehensive Paperwork work over MCP. Use for broad or mixed requests to triage an account, investigate contacts and documents, manage tasks, create or operate workflows, upload paperwork, resolve processing issues, or decide which focused Paperwork skill should handle the request.
 ---
 
-# Paperwork
+# PaperworkBot
 
-Use this as the umbrella entrypoint for Paperwork. Ground the account and
-target records, then route to the narrowest operational skill.
+Use PaperworkBot as the umbrella entrypoint for Paperwork. Ground the account
+and target records, then route to the narrowest operational skill.
 
 ## Related Skills
 

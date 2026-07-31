@@ -1,4 +1,4 @@
 interface:
-  display_name: "Paperwork"
+  display_name: "PaperworkBot"
   short_description: "Route and manage Paperwork work"
-  default_prompt: "Use $paperwork to help me manage my Paperwork account safely."
+  default_prompt: "Use PaperworkBot's $paperwork skill to help me manage my Paperwork account safely."

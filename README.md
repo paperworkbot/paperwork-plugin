@@ -1,7 +1,8 @@
-# Paperwork Plugin
+# PaperworkBot
 
-Operate [Paperwork](https://paperwork.bot) from Claude Code, Codex, or
-OpenCode. The plugin gives a local agent safe procedures for account
+PaperworkBot, from Kaytos, LLC, lets you operate
+[Paperwork](https://paperwork.bot) from Claude Code, Codex, or OpenCode. The
+plugin gives a local agent safe procedures for account
 discovery, queue triage, tasks, workflows, contacts, document intake,
 document investigation, and paperwork resolution over Paperwork's
 permission-scoped MCP server.
@@ -90,3 +91,6 @@ agents, custom tasks, integrations, secrets, or arbitrary code.
 
 See [`plugins/paperwork/README.md`](plugins/paperwork/README.md) for capability
 profiles, safety boundaries, updates, and removal.
+
+The stable install identifier remains `paperwork`, so existing
+`paperwork@paperwork` installations update in place.

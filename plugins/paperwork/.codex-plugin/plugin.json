@@ -1,9 +1,9 @@
 {
   "name": "paperwork",
-  "version": "0.2.1",
-  "description": "Operate your Paperwork account from a local agent: triage queues, manage tasks and workflows, investigate contacts and documents, intake files, and resolve paperwork through a permission-scoped MCP connection.",
+  "version": "0.2.2",
+  "description": "PaperworkBot operates your Paperwork account from a local agent: triage queues, manage tasks and workflows, investigate contacts and documents, intake files, and resolve paperwork through a permission-scoped MCP connection.",
   "author": {
-    "name": "Paperwork",
+    "name": "Kaytos, LLC",
     "url": "https://paperwork.bot"
   },
   "homepage": "https://paperwork.bot",
@@ -20,10 +20,10 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Paperwork",
+    "displayName": "PaperworkBot",
     "shortDescription": "Operate your Paperwork account safely",
-    "longDescription": "Connects your local agent to Paperwork so it can discover account vocabulary, triage queues, investigate and act on tasks, manage workflows, review contacts, intake files, query and download documents, and resolve paperwork. Every call runs as the token's user, within that user's current permissions and the token's capability ceiling.",
-    "developerName": "Paperwork",
+    "longDescription": "PaperworkBot connects your local agent to Paperwork so it can discover account vocabulary, triage queues, investigate and act on tasks, manage workflows, review contacts, intake files, query and download documents, and resolve paperwork. Every call runs as the token's user, within that user's current permissions and the token's capability ceiling.",
+    "developerName": "Kaytos, LLC",
     "category": "Productivity",
     "capabilities": [
       "Interactive",

@@ -1,9 +1,9 @@
 ---
 name: paperwork-setup
-description: Install, connect, verify, diagnose, rotate, or remove the Paperwork MCP connection for Claude Code, Codex, or OpenCode. Use when Paperwork tools are missing, authentication fails, one tool is forbidden, a host changes, a token must be rotated, or the user asks to set up the Paperwork plugin.
+description: Install, connect, verify, diagnose, rotate, or remove the Paperwork MCP connection for Claude Code, Codex, or OpenCode. Use when Paperwork tools are missing, authentication fails, one tool is forbidden, a host changes, a token must be rotated, or the user asks to set up PaperworkBot.
 ---
 
-# Set Up Paperwork
+# Set Up PaperworkBot
 
 Connect a local agent to the user's Paperwork host through sessionless
 Streamable HTTP MCP.

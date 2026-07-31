@@ -1,4 +1,4 @@
 interface:
-  display_name: "Paperwork Setup"
+  display_name: "PaperworkBot Setup"
   short_description: "Connect and diagnose the Paperwork MCP"
-  default_prompt: "Use $paperwork-setup to connect this agent to my Paperwork account."
+  default_prompt: "Use PaperworkBot's $paperwork-setup skill to connect this agent to my Paperwork account."

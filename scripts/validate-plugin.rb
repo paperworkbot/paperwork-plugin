@@ -200,10 +200,10 @@ release_notes = ENV.fetch("PAPERWORK_RELEASE_NOTES", "")
 scan_public_boundary.call("release notes", release_notes) unless release_notes.empty?
 
 if errors.any?
-  warn "Paperwork plugin validation failed:"
+  warn "PaperworkBot plugin validation failed:"
   errors.each { |error| warn "  - #{error}" }
   exit 1
 end
 
-puts "Paperwork plugin #{claude_manifest["version"]} is valid: " \
+puts "PaperworkBot plugin #{claude_manifest["version"]} is valid: " \
   "#{skill_names.length} skills, #{capabilities.length} capabilities, #{eval_paths.length} eval cases."

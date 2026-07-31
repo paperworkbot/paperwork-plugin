@@ -1,15 +1,15 @@
 {
   "name": "paperwork",
-  "description": "Operate Paperwork from Claude Code, Codex, or OpenCode: triage queues, manage workflows and tasks, intake files, and resolve documents through permission-scoped MCP.",
+  "description": "PaperworkBot operates Paperwork from Claude Code, Codex, or OpenCode: triage queues, manage workflows and tasks, intake files, and resolve documents through permission-scoped MCP.",
   "owner": {
-    "name": "Paperwork",
+    "name": "Kaytos, LLC",
     "url": "https://paperwork.bot"
   },
   "plugins": [
     {
       "name": "paperwork",
       "source": "./plugins/paperwork",
-      "description": "Manage the operational work in your Paperwork account from a local agent over MCP.",
+      "description": "Use PaperworkBot to manage the operational work in your Paperwork account from a local agent over MCP.",
       "category": "productivity"
     }
   ]

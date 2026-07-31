@@ -1,9 +1,12 @@
-# Paperwork
+# PaperworkBot
 
-Paperwork is a cross-client operating layer for Claude Code, Codex, and
-OpenCode. One canonical Agent Skills tree teaches each client how to discover
-account vocabulary, triage queues, investigate evidence, and use the
-Paperwork MCP server without broadening the user's request.
+PaperworkBot is Kaytos, LLC's cross-client operating layer for Claude Code,
+Codex, and OpenCode. One canonical Agent Skills tree teaches each client how
+to discover account vocabulary, triage queues, investigate evidence, and use
+the Paperwork MCP server without broadening the user's request.
+
+The package and MCP identifiers remain `paperwork` for compatibility with
+existing installations and client configuration.
 
 ## Security model
 

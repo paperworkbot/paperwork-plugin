@@ -157,6 +157,26 @@ unfinished_pattern = Regexp.new(
 private_key_markers = %w[OPENSSH RSA EC].map do |kind|
   ["BEGIN", kind, "PRIVATE", "KEY"].join(" ")
 end
+public_boundary_patterns = {
+  "a cross-repository issue or pull-request reference" =>
+    /(?<![A-Za-z0-9_.-])[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+#\d+\b/,
+  "a non-distribution GitHub repository URL" =>
+    %r{https?://github\.com/(?!paperworkbot/paperwork-plugin\b)[^\s)"]+},
+  "a local workstation or worktree path" =>
+    Regexp.union(
+      ["/", "Users", "/"].join,
+      ["/", "home", "/"].join,
+      ["C:", "\\", "Users", "\\"].join,
+      [".claude", "worktrees", ""].join("/")
+    )
+}.freeze
+
+scan_public_boundary = lambda do |label, contents|
+  public_boundary_patterns.each do |description, pattern|
+    errors << "#{label} contains #{description}" if contents.match?(pattern)
+  end
+end
+
 ROOT.find do |path|
   next unless path.file?
 
@@ -173,7 +193,11 @@ ROOT.find do |path|
   errors << "#{relative} contains an unfinished marker" if contents.match?(unfinished_pattern)
   errors << "#{relative} appears to contain a Paperwork token" if contents.match?(/pwcap_[A-Za-z0-9_-]{12,}/)
   errors << "#{relative} appears to contain a private key" if private_key_markers.any? { |marker| contents.include?(marker) }
+  scan_public_boundary.call(relative, contents)
 end
+
+release_notes = ENV.fetch("PAPERWORK_RELEASE_NOTES", "")
+scan_public_boundary.call("release notes", release_notes) unless release_notes.empty?
 
 if errors.any?
   warn "Paperwork plugin validation failed:"

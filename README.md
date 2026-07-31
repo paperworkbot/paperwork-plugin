@@ -42,9 +42,10 @@ example into your OpenCode configuration:
 ./scripts/install-opencode.sh
 ```
 
-See [`opencode.example.jsonc`](opencode.example.jsonc). OpenCode reads the
-token from the process environment; never paste it into the configuration
-file.
+Use [`opencode.example.jsonc`](opencode.example.jsonc) for stable OpenCode v1,
+or [`opencode-v2.example.jsonc`](opencode-v2.example.jsonc) for OpenCode v2,
+whose server entries live under `mcp.servers`. OpenCode reads the token from
+the process environment; never paste it into the configuration file.
 
 ## Connect securely
 

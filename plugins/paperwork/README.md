@@ -98,8 +98,11 @@ From the distribution repository:
 
 The installer copies the same skill directories into
 `${XDG_CONFIG_HOME:-$HOME/.config}/opencode/skills`. Add the remote server
-from [`../../opencode.example.jsonc`](../../opencode.example.jsonc), export
-the token into the OpenCode process, and start a new session.
+from [`../../opencode.example.jsonc`](../../opencode.example.jsonc) for
+stable OpenCode v1 or
+[`../../opencode-v2.example.jsonc`](../../opencode-v2.example.jsonc) for
+OpenCode v2, export the token into the OpenCode process, and start a new
+session.
 
 ## Verify
 

@@ -1,7 +1,7 @@
 {
   "name": "paperwork",
   "description": "Operate your Paperwork account from a local agent: triage queues, manage tasks and workflows, investigate contacts and documents, intake files, and resolve paperwork through a permission-scoped MCP connection.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Paperwork",
     "url": "https://paperwork.bot"

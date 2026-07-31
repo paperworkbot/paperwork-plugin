@@ -85,5 +85,6 @@ done
 
 printf 'Installed %s Paperwork skills into %s\n' "$installed" "$destination"
 printf '%s\n' \
-  "Next: merge opencode.example.jsonc into your OpenCode config and provide" \
+  "Next: merge opencode.example.jsonc (stable v1) or opencode-v2.example.jsonc" \
+  "(v2) into your OpenCode config and provide" \
   "PAPERWORK_MCP_TOKEN to the OpenCode process without storing it in the file."

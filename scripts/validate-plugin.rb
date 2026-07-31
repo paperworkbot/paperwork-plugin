@@ -27,7 +27,8 @@ claude_manifest_path = PLUGIN.join(".claude-plugin/plugin.json")
 codex_manifest_path = PLUGIN.join(".codex-plugin/plugin.json")
 marketplace_path = ROOT.join(".claude-plugin/marketplace.json")
 mcp_path = PLUGIN.join(".mcp.json")
-opencode_path = ROOT.join("opencode.example.jsonc")
+opencode_v1_path = ROOT.join("opencode.example.jsonc")
+opencode_v2_path = ROOT.join("opencode-v2.example.jsonc")
 capability_map_path = SKILLS.join("paperwork/references/capabilities.yml")
 
 required_files = [
@@ -35,7 +36,8 @@ required_files = [
   codex_manifest_path,
   marketplace_path,
   mcp_path,
-  opencode_path,
+  opencode_v1_path,
+  opencode_v2_path,
   capability_map_path,
   ROOT.join("scripts/install-opencode.sh")
 ]
@@ -47,7 +49,8 @@ claude_manifest = read_json.call(claude_manifest_path)
 codex_manifest = read_json.call(codex_manifest_path)
 marketplace = read_json.call(marketplace_path)
 mcp = read_json.call(mcp_path)
-opencode = read_json.call(opencode_path)
+opencode_v1 = read_json.call(opencode_v1_path)
+opencode_v2 = read_json.call(opencode_v2_path)
 capability_map = read_yaml.call(capability_map_path)
 
 errors << "Claude manifest name must be paperwork" unless claude_manifest["name"] == "paperwork"
@@ -73,12 +76,20 @@ unless claude_server.dig("headers", "Authorization") == "Bearer ${PAPERWORK_MCP_
   errors << "Claude MCP authorization must reference PAPERWORK_MCP_TOKEN"
 end
 
-opencode_server = opencode.dig("mcp", "paperwork") || {}
-unless opencode_server["type"] == "remote"
-  errors << "OpenCode example must configure a remote MCP server"
+opencode_v1_server = opencode_v1.dig("mcp", "paperwork") || {}
+unless opencode_v1_server["type"] == "remote"
+  errors << "OpenCode v1 example must configure a remote MCP server"
 end
-unless opencode_server.dig("headers", "Authorization") == "Bearer {env:PAPERWORK_MCP_TOKEN}"
-  errors << "OpenCode authorization must reference PAPERWORK_MCP_TOKEN"
+unless opencode_v1_server.dig("headers", "Authorization") == "Bearer {env:PAPERWORK_MCP_TOKEN}"
+  errors << "OpenCode v1 authorization must reference PAPERWORK_MCP_TOKEN"
+end
+
+opencode_v2_server = opencode_v2.dig("mcp", "servers", "paperwork") || {}
+unless opencode_v2_server["type"] == "remote"
+  errors << "OpenCode v2 example must configure a remote MCP server under mcp.servers"
+end
+unless opencode_v2_server.dig("headers", "Authorization") == "Bearer {env:PAPERWORK_MCP_TOKEN}"
+  errors << "OpenCode v2 authorization must reference PAPERWORK_MCP_TOKEN"
 end
 
 skill_paths = SKILLS.children.select { |path| path.directory? && path.join("SKILL.md").file? }

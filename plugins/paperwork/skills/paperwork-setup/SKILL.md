@@ -98,7 +98,9 @@ blanket `approve` policy for every Paperwork tool.
 
 Install the shared skills with the distribution repository's
 `scripts/install-opencode.sh`, then add a remote `paperwork` entry to
-`opencode.json`:
+`opencode.json`.
+
+Stable OpenCode v1 uses a direct entry under `mcp`:
 
 ```json
 {
@@ -111,6 +113,26 @@ Install the shared skills with the distribution repository's
       "oauth": false,
       "headers": {
         "Authorization": "Bearer {env:PAPERWORK_MCP_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+OpenCode v2 nests named servers under `mcp.servers` and no longer uses the
+v1 `enabled` field:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "paperwork": {
+        "type": "remote",
+        "url": "https://your-paperwork-host.example/mcp",
+        "headers": {
+          "Authorization": "Bearer {env:PAPERWORK_MCP_TOKEN}"
+        }
       }
     }
   }

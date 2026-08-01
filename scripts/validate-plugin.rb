@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
 require "json"
+require "open3"
 require "pathname"
+require "set"
 require "yaml"
 
 ROOT = Pathname.new(File.expand_path("..", __dir__))
@@ -39,7 +41,8 @@ required_files = [
   opencode_v1_path,
   opencode_v2_path,
   capability_map_path,
-  ROOT.join("scripts/install-opencode.sh")
+  ROOT.join("scripts/install-opencode.sh"),
+  ROOT.join("scripts/validate-plugin_test.rb")
 ]
 required_files.each do |path|
   errors << "missing #{path.relative_path_from(ROOT)}" unless path.file?
@@ -157,11 +160,29 @@ unfinished_pattern = Regexp.new(
 private_key_markers = %w[OPENSSH RSA EC].map do |kind|
   ["BEGIN", kind, "PRIVATE", "KEY"].join(" ")
 end
+approved_public_repositories = [
+  "actions/checkout",
+  "gitleaks/gitleaks",
+  "paperworkbot/paperwork-plugin"
+].freeze
+non_repository_slash_pairs = [
+  "and/or",
+  "minitest/autorun",
+  "n/m",
+  "plugins/paperwork",
+  "read/write",
+  "remotes/origin",
+  "statements/reports",
+  "supplier/customer",
+  "yes/no"
+].freeze
+repository_shorthand_pattern =
+  %r{(?<![A-Za-z0-9_./-])([a-z0-9](?:[a-z0-9_.-]*[a-z0-9_-])?)/([a-z0-9](?:[a-z0-9_.-]*[a-z0-9_-])?)(?![A-Za-z0-9_./-])}
+github_repository_url_pattern =
+  %r{https?://github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+)}
 public_boundary_patterns = {
   "a cross-repository issue or pull-request reference" =>
     /(?<![A-Za-z0-9_.-])[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+#\d+\b/,
-  "a non-distribution GitHub repository URL" =>
-    %r{https?://github\.com/(?!paperworkbot/paperwork-plugin\b)[^\s)"]+},
   "a local workstation or worktree path" =>
     Regexp.union(
       ["/", "Users", "/"].join,
@@ -174,6 +195,22 @@ public_boundary_patterns = {
 scan_public_boundary = lambda do |label, contents|
   public_boundary_patterns.each do |description, pattern|
     errors << "#{label} contains #{description}" if contents.match?(pattern)
+  end
+
+  contents.scan(github_repository_url_pattern).each do |owner, repository|
+    shorthand = "#{owner}/#{repository}"
+    unless approved_public_repositories.include?(shorthand)
+      errors << "#{label} contains an unapproved GitHub repository URL"
+    end
+  end
+
+  contents.scan(repository_shorthand_pattern).each do |owner, repository|
+    shorthand = "#{owner}/#{repository}"
+    next if approved_public_repositories.include?(shorthand)
+    next if non_repository_slash_pairs.include?(shorthand)
+    next if %w[.json .jsonc .md .rb .sh .yaml .yml].include?(File.extname(repository))
+
+    errors << "#{label} contains an unapproved repository shorthand"
   end
 end
 
@@ -196,12 +233,95 @@ ROOT.find do |path|
   scan_public_boundary.call(relative, contents)
 end
 
-release_notes = ENV.fetch("PAPERWORK_RELEASE_NOTES", "")
-scan_public_boundary.call("release notes", release_notes) unless release_notes.empty?
+public_metadata = [
+  ENV.fetch("PAPERWORK_PUBLIC_METADATA", ""),
+  ENV.fetch("PAPERWORK_RELEASE_NOTES", "")
+].reject(&:empty?).join("\n")
+scan_public_boundary.call("public metadata", public_metadata) unless public_metadata.empty?
+
+if ROOT.join(".git").exist?
+  commit_messages, commit_error, commit_status = Open3.capture3(
+    "git",
+    "-C",
+    ROOT.to_s,
+    "log",
+    "--all",
+    "--format=fuller"
+  )
+  ref_metadata, ref_metadata_error, ref_metadata_status = Open3.capture3(
+    "git",
+    "-C",
+    ROOT.to_s,
+    "for-each-ref",
+    "--format=%(refname)%0a%(subject)%0a%(body)"
+  )
+  ref_names, ref_names_error, ref_names_status = Open3.capture3(
+    "git",
+    "-C",
+    ROOT.to_s,
+    "for-each-ref",
+    "--format=%(refname)"
+  )
+  objects, objects_error, objects_status = Open3.capture3(
+    "git",
+    "-C",
+    ROOT.to_s,
+    "rev-list",
+    "--objects",
+    "--all"
+  )
+
+  if commit_status.success? && ref_metadata_status.success? &&
+      ref_names_status.success? && objects_status.success?
+    scan_public_boundary.call("Git history", commit_messages.scrub)
+    scan_public_boundary.call("Git refs", ref_metadata.scrub)
+    ref_names.each_line do |ref_name|
+      normalized_ref_name = ref_name.strip.sub(
+        %r{\Arefs/(?:heads|tags|remotes/origin)/},
+        ""
+      )
+      scan_public_boundary.call("Git ref #{ref_name.strip}", normalized_ref_name)
+    end
+
+    scanned_blobs = Set.new
+    objects.each_line do |object|
+      object_id, path = object.strip.split(" ", 2)
+      next if object_id.nil? || scanned_blobs.include?(object_id)
+
+      type, type_error, type_status = Open3.capture3(
+        "git", "-C", ROOT.to_s, "cat-file", "-t", object_id
+      )
+      unless type_status.success?
+        errors << "could not inspect Git object #{object_id}: #{type_error.strip}"
+        next
+      end
+      next unless type.strip == "blob"
+
+      contents, contents_error, contents_status = Open3.capture3(
+        "git", "-C", ROOT.to_s, "cat-file", "-p", object_id
+      )
+      unless contents_status.success?
+        errors << "could not read Git object #{object_id}: #{contents_error.strip}"
+        next
+      end
+
+      scanned_blobs << object_id
+      scan_public_boundary.call("Git history file #{path || object_id}", contents.scrub)
+    end
+  else
+    details = [
+      commit_error,
+      ref_metadata_error,
+      ref_names_error,
+      objects_error
+    ].reject(&:empty?).join(" ")
+    errors << "could not scan Git history and refs: #{details.strip}"
+  end
+end
 
 if errors.any?
   warn "PaperworkBot plugin validation failed:"
-  errors.each { |error| warn "  - #{error}" }
+  errors.uniq.each { |error| warn "  - #{error}" }
   exit 1
 end
 

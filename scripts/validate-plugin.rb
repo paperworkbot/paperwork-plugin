@@ -203,6 +203,19 @@ public_boundary_patterns = {
 }.freeze
 
 scan_public_boundary = lambda do |label, contents|
+  # GitHub's standard merge subject names the source owner and branch. Remove
+  # only this repository's public owner prefix so the branch name still gets
+  # scanned without being mistaken for a repository shorthand.
+  public_repository_owner = "paperworkbot"
+  github_merge_subject_pattern = Regexp.new(
+    "^(\\s*Merge pull request #\\d+ from )" \
+      "#{Regexp.escape(public_repository_owner)}/([A-Za-z0-9_.-]+\\s*)$"
+  )
+  contents = contents.gsub(
+    github_merge_subject_pattern,
+    '\1\2'
+  )
+
   public_boundary_patterns.each do |description, pattern|
     errors << "#{label} contains #{description}" if contents.match?(pattern)
   end

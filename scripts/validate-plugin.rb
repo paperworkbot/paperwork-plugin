@@ -32,6 +32,7 @@ mcp_path = PLUGIN.join(".mcp.json")
 opencode_v1_path = ROOT.join("opencode.example.jsonc")
 opencode_v2_path = ROOT.join("opencode-v2.example.jsonc")
 capability_map_path = SKILLS.join("paperwork/references/capabilities.yml")
+branding_icon_path = PLUGIN.join("assets", "paperwork-icon.svg")
 
 required_files = [
   claude_manifest_path,
@@ -41,6 +42,7 @@ required_files = [
   opencode_v1_path,
   opencode_v2_path,
   capability_map_path,
+  branding_icon_path,
   ROOT.join("scripts/install-opencode.sh"),
   ROOT.join("scripts/validate-plugin_test.rb")
 ]
@@ -69,6 +71,14 @@ unless marketplace.dig("plugins", 0, "source") == "./plugins/paperwork"
 end
 unless codex_manifest["skills"] == "./skills/"
   errors << "Codex manifest must use the shared ./skills/ tree"
+end
+unless codex_manifest.dig("interface", "brandColor") == "#EA473C"
+  errors << "Codex manifest must use the Paperwork brand color"
+end
+%w[composerIcon logo].each do |field|
+  unless codex_manifest.dig("interface", field) == "./assets/paperwork-icon.svg"
+    errors << "Codex manifest #{field} must use the bundled Paperwork icon"
+  end
 end
 
 claude_server = mcp.dig("mcpServers", "paperwork") || {}

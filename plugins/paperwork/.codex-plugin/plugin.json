@@ -1,6 +1,6 @@
 {
   "name": "paperwork",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "PaperworkBot operates your Paperwork account from a local agent: triage queues, manage tasks and workflows, investigate contacts and documents, intake files, and resolve paperwork through a permission-scoped MCP connection.",
   "author": {
     "name": "Kaytos, LLC",
@@ -30,6 +30,9 @@
       "Write"
     ],
     "websiteURL": "https://paperwork.bot",
+    "brandColor": "#EA473C",
+    "composerIcon": "./assets/paperwork-icon.svg",
+    "logo": "./assets/paperwork-icon.svg",
     "defaultPrompt": [
       "What needs my attention in Paperwork?",
       "Show my active Paperwork workflows and what each is waiting on.",

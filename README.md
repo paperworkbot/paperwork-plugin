@@ -1,16 +1,29 @@
 # PaperworkBot
 
 PaperworkBot, from Kaytos, LLC, lets you operate
-[Paperwork](https://paperwork.bot) from Claude Code, Codex, or OpenCode. The
-plugin gives a local agent safe procedures for account
-discovery, queue triage, tasks, workflows, contacts, document intake,
-document investigation, and paperwork resolution over Paperwork's
-permission-scoped MCP server.
+[Paperwork](https://paperwork.bot) from the Claude app, Claude Code, Codex, or
+OpenCode. The remote connector gives Claude app users the Paperwork tools
+directly; the plugin adds safe procedures for account discovery, queue triage,
+tasks, workflows, contacts, document intake, processing follow-through,
+document investigation, and paperwork resolution.
 
-Every call runs as the user bound to the API token, within both that user's
-current Paperwork permissions and the token's capability ceiling.
+Managed-cloud users sign in through Paperwork in the browser. Every call runs
+as that signed-in user and stays inside their current Paperwork permissions.
 
 ## Install
+
+### Claude app, web, or mobile
+
+Open **Customize -> Connectors**, choose **Add custom connector**, and enter:
+
+```text
+https://paperwork.bot/mcp
+```
+
+Choose **Connect**, sign in to Paperwork, and approve access. The connection
+syncs through the user's Claude account, so it is available in Claude web,
+Desktop, mobile, Cowork, and Claude Code. Team and Enterprise plans require an
+Owner to add the custom connector to the organization first.
 
 ### Claude Code
 
@@ -19,20 +32,19 @@ current Paperwork permissions and the token's capability ceiling.
 /plugin install paperwork@paperwork
 ```
 
-Set `PAPERWORK_MCP_TOKEN` and, for a self-hosted deployment,
-`PAPERWORK_MCP_URL`. Run `/reload-plugins` or start a new session.
+Open `/mcp`, choose Paperwork, and authenticate in the browser. Run
+`/reload-plugins` or start a new session after connecting.
 
 ### Codex
 
 ```sh
 codex plugin marketplace add paperworkbot/paperwork-plugin
 codex plugin add paperwork@paperwork
-codex mcp add paperwork \
-  --url "$PAPERWORK_MCP_URL" \
-  --bearer-token-env-var PAPERWORK_MCP_TOKEN
 ```
 
-Start a new Codex task after installation.
+In **Settings -> MCP servers**, open Paperwork and choose **Authenticate**.
+Sign in to Paperwork in the browser, approve access, and start a
+new Codex task.
 
 ### OpenCode
 
@@ -48,27 +60,13 @@ or [`opencode-v2.example.jsonc`](opencode-v2.example.jsonc) for OpenCode v2,
 whose server entries live under `mcp.servers`. OpenCode reads the token from
 the process environment; never paste it into the configuration file.
 
-## Connect securely
+## Manual connections
 
-Create a personal token under **Setup -> API Access** in Paperwork with the
-`mcp` audience and only the capabilities needed for your work. Tokens are
-shown once and begin with `pwcap_`.
-
-Prefer an OS credential manager or a silent prompt that populates the client
-process environment. For one temporary zsh session:
-
-```sh
-read -s "PAPERWORK_MCP_TOKEN?Paperwork token: "; echo
-export PAPERWORK_MCP_TOKEN
-export PAPERWORK_MCP_URL="https://your-paperwork-host.example/mcp"
-```
-
-Managed-cloud users can omit `PAPERWORK_MCP_URL`; the bundled Claude
-connection defaults to `https://paperwork.bot/mcp`.
-
-The token limits operations, not records. Use a dedicated non-admin Paperwork
-user when possible: account-scoped capabilities can reach everything that
-user is currently allowed to see.
+OpenCode, headless automation, and self-hosted hosts that differ from
+`https://paperwork.bot` still use a manual `pwcap_` token from
+**Setup -> API & MCP Access**. Keep it in an OS credential manager or process
+environment, never in chat or a repository. Use a dedicated non-admin user for
+unattended automation.
 
 ## What is included
 
@@ -82,12 +80,15 @@ user is currently allowed to see.
 | `paperwork-process-management` | Searches, creates, annotates, messages, and changes workflows |
 | `paperwork-document-management` | Searches, inspects, reads, downloads, resolves, and reprocesses paperwork |
 | `paperwork-intake` | Creates a workflow, assigns contacts, uploads files, and verifies processing |
+| `paperwork-processing` | Follows an upload through processing, extraction, result inspection, and timeline review |
 | `paperwork-contact-history` | Reviews one counterparty relationship |
 | `paperwork-document-lookup` | Reconciles one or many document identifiers |
+| `paperwork-custom-task-tools` | Discovers, invokes, and polls administrator-approved account-specific tools |
 
-The current release intentionally covers all 32 operations exposed by the
-Paperwork MCP capability catalog. It does not administer accounts, users,
-agents, custom tasks, integrations, secrets, or arbitrary code.
+The current release intentionally covers all 33 operations exposed by the
+fixed Paperwork MCP capability catalog plus opt-in direct custom-task tools.
+It does not administer accounts, users, agents, custom-task definitions,
+integrations, secrets, or arbitrary code.
 
 See [`plugins/paperwork/README.md`](plugins/paperwork/README.md) for capability
 profiles, safety boundaries, updates, and removal.

@@ -19,13 +19,9 @@ deployment with MCP enabled."
 
 Before publishing:
 
-1. Run `ruby scripts/validate-plugin_test.rb` and
-   `ruby scripts/validate-plugin.rb`.
-2. Scan the complete Git history with Gitleaks.
-3. Inspect GitHub activity for force-pushed or otherwise orphaned commits. A
-   clean replacement repository is required when an orphaned object crosses
-   the public boundary; rewriting branch history alone is not sufficient.
-4. Review releases, issues, pull requests, Actions output, and repository
-   metadata for non-public references.
-5. Confirm the distribution tree exactly matches the reviewed source package.
-6. Verify the release from its public URL after publication.
+1. Run `ruby scripts/validate-plugin.rb`.
+2. Scan the complete Git history and GitHub release, issue, pull-request, and
+   repository metadata for non-public references.
+3. Scan for credentials with a secret scanner.
+4. Confirm the distribution tree exactly matches the reviewed source package.
+5. Verify the release from its public URL after publication.

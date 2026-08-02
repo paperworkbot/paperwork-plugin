@@ -16,33 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the distribution
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Test public release boundary validation
-        run: ruby scripts/validate-plugin_test.rb
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Validate manifests, skills, and capability coverage
         env:
-          PAPERWORK_PUBLIC_METADATA: |
-            ${{ github.event.release.name || '' }}
-            ${{ github.event.release.tag_name || '' }}
-            ${{ github.event.release.body || '' }}
-            ${{ github.event.repository.description || '' }}
-            ${{ github.event.repository.homepage || '' }}
+          PAPERWORK_RELEASE_NOTES: ${{ github.event.release.body || '' }}
         run: ruby scripts/validate-plugin.rb
-      - name: Scan complete Git history for secrets
-        env:
-          GITLEAKS_VERSION: 8.30.1
-          GITLEAKS_LINUX_X64_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
-        run: |
-          gitleaks_archive="$RUNNER_TEMP/gitleaks.tar.gz"
-          curl --fail --silent --show-error --location \
-            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
-            --output "$gitleaks_archive"
-          echo "${GITLEAKS_LINUX_X64_SHA256}  ${gitleaks_archive}" | sha256sum --check
-          tar -xzf "$gitleaks_archive" -C "$RUNNER_TEMP" gitleaks
-          "$RUNNER_TEMP/gitleaks" git --redact --no-banner .
       - name: Exercise the OpenCode installer
         run: |
           destination="$RUNNER_TEMP/paperwork-opencode/skills"

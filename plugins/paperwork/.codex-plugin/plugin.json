@@ -1,7 +1,7 @@
 {
   "name": "paperwork",
-  "version": "0.2.4",
-  "description": "PaperworkBot operates your Paperwork account from a local agent: triage queues, manage tasks and workflows, investigate contacts and documents, intake files, and resolve paperwork through a permission-scoped MCP connection.",
+  "version": "0.5.0",
+  "description": "PaperworkBot operates your Paperwork account from a local agent: triage queues, manage tasks and workflows, intake files through processing and extraction, investigate contacts and documents, run approved custom tools, and resolve paperwork through a permission-scoped MCP connection.",
   "author": {
     "name": "Kaytos, LLC",
     "url": "https://paperwork.bot"
@@ -22,7 +22,7 @@
   "interface": {
     "displayName": "PaperworkBot",
     "shortDescription": "Operate your Paperwork account safely",
-    "longDescription": "PaperworkBot connects your local agent to Paperwork so it can discover account vocabulary, triage queues, investigate and act on tasks, manage workflows, review contacts, intake files, query and download documents, and resolve paperwork. Every call runs as the token's user, within that user's current permissions and the token's capability ceiling.",
+    "longDescription": "PaperworkBot connects your local agent to Paperwork so it can discover account vocabulary, triage queues, investigate and act on tasks, manage workflows, review contacts, intake files, follow processing through extracted results, query and download documents, invoke administrator-approved custom tools, and resolve paperwork. Sign in through Paperwork when Codex asks; every call runs within your current Paperwork permissions.",
     "developerName": "Kaytos, LLC",
     "category": "Productivity",
     "capabilities": [
@@ -30,13 +30,10 @@
       "Write"
     ],
     "websiteURL": "https://paperwork.bot",
-    "brandColor": "#EA473C",
-    "composerIcon": "./assets/paperwork-icon.svg",
-    "logo": "./assets/paperwork-icon.svg",
     "defaultPrompt": [
       "What needs my attention in Paperwork?",
       "Show my active Paperwork workflows and what each is waiting on.",
-      "Help me intake these files into the right Paperwork workflow."
+      "Help me intake these files, wait for extraction, and show me what Paperwork found."
     ]
   }
 }

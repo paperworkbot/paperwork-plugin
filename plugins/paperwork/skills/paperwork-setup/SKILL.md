@@ -8,15 +8,21 @@ description: Install, connect, verify, diagnose, rotate, or remove the Paperwork
 Connect a local agent to the user's Paperwork host through sessionless
 Streamable HTTP MCP.
 
-## Connection Inputs
+## Normal User Setup
 
-- `PAPERWORK_MCP_URL`: the deployment's absolute `/mcp` URL. Managed cloud
-  defaults to `https://paperwork.bot/mcp`; never guess a self-hosted host.
-- `PAPERWORK_MCP_TOKEN`: a one-time `pwcap_...` value issued under
-  **Setup -> API Access**, bound to one user and carrying the `mcp` audience.
+The managed-cloud plugin declares `https://paperwork.bot/mcp` as an OAuth MCP
+server. After installation, use the client's authentication action:
 
-The token is a bearer credential. Never ask the user to paste it into chat and
-never echo it after entry.
+1. Choose **Authenticate**, **Connect**, or **Log in** for Paperwork, depending
+   on the client.
+2. Sign in to Paperwork in the browser.
+3. Review the client name and acting user, then choose **Allow access**.
+4. Return to the client and start a new task if its tool catalog was already
+   open.
+
+Do not ask a managed-cloud user to create, copy, or export a token. The client
+stores short-lived OAuth credentials in its own credential store and refreshes
+them automatically.
 
 ## Check First
 
@@ -36,8 +42,10 @@ never echo it after entry.
   `PAPERWORK_CAPABILITIES_API_ENABLED`.
 - **Endpoint not found:** the server version or feature flag does not expose
   `/mcp`.
-- **Unauthorized:** token is missing, malformed, expired, revoked, belongs to a
-  disabled user, or lacks the `mcp` audience.
+- **Unauthorized:** choose the client's Paperwork authentication action. If
+  already connected, disconnect and authorize again. For a manual token
+  connection, the token may be missing, expired, revoked, or bound to a
+  disabled user.
 - **Forbidden on one tool:** connection is healthy, but the token ceiling or
   acting user's current Paperwork permission denies that capability.
 - **Not found on one record:** do not treat this as connection failure; the
@@ -48,51 +56,61 @@ never echo it after entry.
 Use [the capability map](../paperwork/references/capabilities.yml) to identify
 the missing grant and its owning workflow skill.
 
-## Store The Credential Safely
+## Codex
 
-Prefer an OS credential manager or a silent prompt that populates the client
-process environment. For a temporary zsh session:
+Install the plugin from the marketplace. In **Settings -> MCP servers**, open
+Paperwork and choose **Authenticate**. Codex opens Paperwork in the
+browser and stores the resulting OAuth credentials in its credential store.
+Start a new Codex task after connecting.
 
-```sh
-read -s "PAPERWORK_MCP_TOKEN?Paperwork token: "; echo
-export PAPERWORK_MCP_TOKEN
-export PAPERWORK_MCP_URL="https://your-paperwork-host.example/mcp"
-```
-
-Do not put the token in command arguments, repository files, `opencode.json`,
-task notes, or documents. Plaintext shell-profile storage is a fallback only
-when the user explicitly accepts that local risk.
+Paperwork advertises MCP read/write annotations so Codex can auto-approve
+trusted reads while continuing to gate state-changing tools. Do not set a
+blanket `approve` policy for every Paperwork tool.
 
 ## Claude Code
 
-The installed plugin declares the server in `.mcp.json`. Set both environment
-variables, then run `/reload-plugins` or start a new Claude Code session.
-Inspect the plugin-provided server with `/mcp`.
+The installed plugin declares the OAuth server in `.mcp.json`. Use `/mcp`,
+choose Paperwork, and authenticate in the browser. Run `/reload-plugins` or
+start a new session if tools do not appear after authorization.
 
 Do not add a second manual `paperwork` MCP server when the plugin server is
 enabled; duplicate catalogs confuse tool selection.
 
-Remove legacy manual servers that embed an `Authorization` value directly in
-client config. Use `claude mcp list` to identify duplicates; avoid diagnostic
-commands that print configured headers, revoke the exposed legacy token, and
-keep only the plugin's environment-backed server.
+## Claude App, Web, Mobile, And Cowork
 
-## Codex
+Paperwork is a remote connector, so it is configured through the user's Claude
+account rather than a desktop configuration file:
 
-Register the connection once:
+1. Open **Customize -> Connectors**.
+2. Choose **Add custom connector**.
+3. Enter `https://paperwork.bot/mcp`.
+4. Choose **Connect**, sign in to Paperwork, and approve access.
 
-```sh
-codex mcp remove paperwork
-codex mcp add paperwork \
-  --url "$PAPERWORK_MCP_URL" \
-  --bearer-token-env-var PAPERWORK_MCP_TOKEN
-```
+Do not ask for an OAuth client ID or secret. Paperwork supports dynamic client
+registration. Team and Enterprise plans require an Owner to add the custom
+connector under **Organization settings -> Connectors** before members can
+connect their own Paperwork accounts.
 
-Start a new Codex task after plugin or MCP changes. Codex reads the token from
-the named environment variable and does not store its value in MCP config.
-Paperwork advertises MCP read/write annotations so Codex can auto-approve
-trusted reads while continuing to gate state-changing tools. Do not set a
-blanket `approve` policy for every Paperwork tool.
+## Manual Tokens For Automation And Self-Hosting
+
+Use a manual token only for headless automation, a client without MCP OAuth, or
+a self-hosted Paperwork deployment whose URL differs from the managed-cloud
+plugin default.
+
+- `PAPERWORK_MCP_URL`: the deployment's absolute `/mcp` URL. Never guess a
+  self-hosted host.
+- `PAPERWORK_MCP_TOKEN`: a one-time `pwcap_...` value issued under
+  **Setup -> API & MCP Access**, bound to one user and carrying the `mcp`
+  audience.
+
+The token is a bearer credential. Never ask the user to paste it into chat and
+never echo it after entry. Prefer an OS credential manager or a silent prompt
+that populates the client process environment. Do not put the token in command
+arguments, repository files, `opencode.json`, task notes, or documents.
+
+For Codex, remove or disable the managed-cloud plugin server before registering
+a self-hosted server with `--bearer-token-env-var PAPERWORK_MCP_TOKEN`; duplicate
+catalogs confuse tool selection.
 
 ## OpenCode
 
@@ -143,20 +161,17 @@ OpenCode discovers the same skills from its global skills directory and
 substitutes the token from the environment. Use `opencode mcp list` when the
 installed version provides MCP diagnostics.
 
-## Rotate Or Remove
+## Disconnect, Rotate, Or Remove
 
-1. Issue a replacement token with the same or narrower user, audience,
-   capabilities, and a short expiration.
-2. Update the client environment without printing the new value.
-3. Start a new client session and verify one granted read.
-4. Revoke the prior token in **Setup -> API Access**.
-5. Confirm the new token's last-use timestamp and the old token's revoked state.
+For OAuth, use the client's **Disconnect** action and reconnect if needed.
+Paperwork access also stops immediately when the acting user is deactivated.
 
-Removing the plugin does not revoke its Paperwork token. Revoke unused tokens
-separately.
+For a manual token, issue a replacement with the same or narrower grants,
+update the client credential without printing it, verify one read, and revoke
+the prior token under **Setup -> API & MCP Access**.
 
 ## Production Guidance
 
-Use a dedicated non-admin Paperwork user whose roles bound record access. A
-token narrows operations, not records: any granted account-scoped capability
-can reach everything that acting user can currently see.
+OAuth runs as the person who approved access and remains bounded by that
+person's current roles. For unattended manual-token automation, use a
+dedicated non-admin Paperwork user whose roles bound record access.

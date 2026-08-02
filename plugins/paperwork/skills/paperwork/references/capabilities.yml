@@ -1,4 +1,11 @@
 version: 1
+dynamic_tools:
+  direct_custom_tasks:
+    mcp_pattern: "custom_task_*"
+    run_status_mcp: custom_task_runs_get
+    mode: write
+    scope: workflow
+    skills: [paperwork-custom-task-tools]
 capabilities:
   account.describe:
     mcp: account_describe
@@ -60,6 +67,11 @@ capabilities:
     mode: write
     scope: workflow
     skills: [paperwork-task-work, paperwork-document-management, paperwork-intake]
+  attachments.get:
+    mcp: attachments_get
+    mode: read
+    scope: workflow
+    skills: [paperwork-processing, paperwork-intake, paperwork-document-management]
   paperworks.set_status:
     mcp: paperworks_set_status
     mode: write

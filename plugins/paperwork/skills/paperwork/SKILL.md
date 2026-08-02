@@ -19,8 +19,10 @@ and target records, then route to the narrowest operational skill.
 | Search, create, message, annotate, or change workflow state | [paperwork-process-management](../paperwork-process-management/SKILL.md) |
 | Search, inspect, read, download, resolve, or reprocess documents | [paperwork-document-management](../paperwork-document-management/SKILL.md) |
 | Create a workflow and upload new paperwork | [paperwork-intake](../paperwork-intake/SKILL.md) |
+| Wait for an upload, inspect extraction, and continue from its result | [paperwork-processing](../paperwork-processing/SKILL.md) |
 | Review one contact's relationship and open work | [paperwork-contact-history](../paperwork-contact-history/SKILL.md) |
 | Check whether one or many business identifiers already exist | [paperwork-document-lookup](../paperwork-document-lookup/SKILL.md) |
+| Run an administrator-approved account-specific direct tool | [paperwork-custom-task-tools](../paperwork-custom-task-tools/SKILL.md) |
 
 ## Routing
 
@@ -32,7 +34,11 @@ and target records, then route to the narrowest operational skill.
 4. Route workflow-level requests to `paperwork-process-management`, new-file
    intake to `paperwork-intake`, and document-level requests to
    `paperwork-document-management`.
-5. For a mixed request, keep one grounded chain of references. For example:
+5. After upload, or when asked to wait for processing or extraction, keep the
+   returned attachment ID and route to `paperwork-processing`.
+6. Route an advertised `custom_task_*` operation or an existing custom-task
+   run reference to `paperwork-custom-task-tools`.
+7. For a mixed request, keep one grounded chain of references. For example:
    contact search -> document search -> dossier -> workflow history -> task
    action. Do not restart discovery in each skill.
 
@@ -58,5 +64,7 @@ selection, capability requirements, or token scope is unclear.
 - "What needs my attention across Paperwork?"
 - "Find recent statements from this supplier and explain anything stuck."
 - "Create a workflow under the statement agent and upload these files."
+- "Upload this document, wait for extraction, show the result and timeline,
+  then help with anything it needs."
 - "Tell PW-123 to re-check the totals, then show me what happened."
 - "Resolve TASK-456 using the action it currently offers."

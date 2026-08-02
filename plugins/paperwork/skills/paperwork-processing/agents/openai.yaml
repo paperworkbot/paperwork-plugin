@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Processing"
+  short_description: "Follow uploads through extraction"
+  default_prompt: "Use $paperwork-processing to follow an uploaded file through processing and inspect its extracted result."

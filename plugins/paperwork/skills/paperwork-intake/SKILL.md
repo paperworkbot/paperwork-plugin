@@ -1,6 +1,6 @@
 ---
 name: paperwork-intake
-description: Start a Paperwork workflow and add documents through the MCP connection. Use when the user wants to submit, ingest, upload, or process new paperwork, create a workflow from local files, attach documents to an existing workflow or task, or verify that newly uploaded files entered processing.
+description: Start a Paperwork workflow and add documents through the MCP connection. Use when the user wants to submit, ingest, upload, or process new paperwork, create a workflow from local files, attach documents to an existing workflow or task, verify that newly uploaded files entered processing, or hand processing monitoring to the focused follow-up skill.
 ---
 
 # Paperwork Intake
@@ -53,11 +53,15 @@ already contains these exact targets and arguments.
 ## Verify
 
 1. Call `context_get` after the writes.
-2. Use `paperworks_lookup` or `paperworks_get` when a paperwork reference is
-   available.
-3. Use `processes_history` to confirm upload and processing events.
-4. Report each attachment's observed state. "Uploaded" is not the same as
-   "processed"; processing is asynchronous.
+2. Pass each returned attachment ID and the workflow reference to
+   [paperwork-processing](../paperwork-processing/SKILL.md).
+3. Use `attachments_get` to observe file processing. Do not treat
+   `processing_state: processed` as completed extraction; wait for
+   `ready_for_read` when the user wants extracted output.
+4. Use `paperworks_get` with the returned paperwork reference, then
+   `processes_history` to confirm the upload and processing sequence.
+5. Report each attachment's observed state. "Uploaded" is not the same as
+   "processed" or "ready for read"; processing is asynchronous.
 
 ## Rules
 

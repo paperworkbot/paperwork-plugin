@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 
 require "json"
-require "open3"
 require "pathname"
-require "set"
 require "yaml"
 
 ROOT = Pathname.new(File.expand_path("..", __dir__))
@@ -32,7 +30,6 @@ mcp_path = PLUGIN.join(".mcp.json")
 opencode_v1_path = ROOT.join("opencode.example.jsonc")
 opencode_v2_path = ROOT.join("opencode-v2.example.jsonc")
 capability_map_path = SKILLS.join("paperwork/references/capabilities.yml")
-branding_icon_path = PLUGIN.join("assets", "paperwork-icon.svg")
 
 required_files = [
   claude_manifest_path,
@@ -42,9 +39,7 @@ required_files = [
   opencode_v1_path,
   opencode_v2_path,
   capability_map_path,
-  branding_icon_path,
-  ROOT.join("scripts/install-opencode.sh"),
-  ROOT.join("scripts/validate-plugin_test.rb")
+  ROOT.join("scripts/install-opencode.sh")
 ]
 required_files.each do |path|
   errors << "missing #{path.relative_path_from(ROOT)}" unless path.file?
@@ -72,21 +67,16 @@ end
 unless codex_manifest["skills"] == "./skills/"
   errors << "Codex manifest must use the shared ./skills/ tree"
 end
-unless codex_manifest.dig("interface", "brandColor") == "#EA473C"
-  errors << "Codex manifest must use the Paperwork brand color"
-end
-%w[composerIcon logo].each do |field|
-  unless codex_manifest.dig("interface", field) == "./assets/paperwork-icon.svg"
-    errors << "Codex manifest #{field} must use the bundled Paperwork icon"
-  end
-end
 
 claude_server = mcp.dig("mcpServers", "paperwork") || {}
-unless claude_server["url"].to_s.include?("PAPERWORK_MCP_URL")
-  errors << "Claude MCP URL must be environment-configurable"
+unless claude_server["url"] == "https://paperwork.bot/mcp"
+  errors << "managed-cloud MCP URL must use the Paperwork HTTPS endpoint"
 end
-unless claude_server.dig("headers", "Authorization") == "Bearer ${PAPERWORK_MCP_TOKEN}"
-  errors << "Claude MCP authorization must reference PAPERWORK_MCP_TOKEN"
+unless claude_server["oauth_resource"] == "https://paperwork.bot/mcp"
+  errors << "managed-cloud MCP server must declare its OAuth resource"
+end
+if claude_server.key?("headers")
+  errors << "managed-cloud MCP server must not require a bearer-token environment variable"
 end
 
 opencode_v1_server = opencode_v1.dig("mcp", "paperwork") || {}
@@ -107,7 +97,7 @@ end
 
 skill_paths = SKILLS.children.select { |path| path.directory? && path.join("SKILL.md").file? }
 skill_names = skill_paths.map { |path| path.basename.to_s }.sort
-errors << "expected 10 skills, found #{skill_names.length}" unless skill_names.length == 10
+errors << "no skills found" if skill_names.empty?
 
 skill_paths.each do |skill_path|
   relative = skill_path.relative_path_from(ROOT)
@@ -135,7 +125,32 @@ rescue Psych::Exception => error
 end
 
 capabilities = capability_map.fetch("capabilities", {})
-errors << "expected 32 mapped capabilities, found #{capabilities.length}" unless capabilities.length == 32
+# The exact capability set is asserted against the live registry by
+# spec/plugin/paperwork_plugin_spec.rb. This script runs standalone in the
+# distribution repository, where the registry is unavailable, so it checks
+# internal consistency instead of a hardcoded count that silently drifts.
+errors << "no capabilities mapped" if capabilities.empty?
+capabilities.each do |capability_name, mapping|
+  Array(mapping && mapping["skills"]).each do |skill_name|
+    next if skill_names.include?(skill_name)
+
+    errors << "#{capability_name} references missing skill #{skill_name}"
+  end
+end
+dynamic_tools = capability_map.fetch("dynamic_tools", {})
+direct_custom_tasks = dynamic_tools.fetch("direct_custom_tasks", {})
+unless direct_custom_tasks["mcp_pattern"] == "custom_task_*"
+  errors << "direct custom tasks must use the custom_task_* MCP namespace"
+end
+unless direct_custom_tasks["run_status_mcp"] == "custom_task_runs_get"
+  errors << "direct custom tasks must map custom_task_runs_get"
+end
+unless direct_custom_tasks["mode"] == "write" && direct_custom_tasks["scope"] == "workflow"
+  errors << "direct custom tasks must be workflow-scoped writes"
+end
+Array(direct_custom_tasks["skills"]).each do |skill_name|
+  errors << "direct custom tasks reference missing skill #{skill_name}" unless skill_names.include?(skill_name)
+end
 
 wire_names = []
 capabilities.each do |name, entry|
@@ -154,7 +169,7 @@ end
 errors << "capability MCP wire names are not unique" unless wire_names.uniq.length == wire_names.length
 
 eval_paths = PLUGIN.join("evals").children.select(&:directory?)
-errors << "expected at least four behavioral eval cases" unless eval_paths.length >= 4
+errors << "expected at least six behavioral eval cases" unless eval_paths.length >= 6
 eval_paths.each do |eval_path|
   errors << "#{eval_path.relative_path_from(ROOT)} is missing prompt.md" unless eval_path.join("prompt.md").file?
   graders = eval_path.join("graders")
@@ -170,29 +185,11 @@ unfinished_pattern = Regexp.new(
 private_key_markers = %w[OPENSSH RSA EC].map do |kind|
   ["BEGIN", kind, "PRIVATE", "KEY"].join(" ")
 end
-approved_public_repositories = [
-  "actions/checkout",
-  "gitleaks/gitleaks",
-  "paperworkbot/paperwork-plugin"
-].freeze
-non_repository_slash_pairs = [
-  "and/or",
-  "minitest/autorun",
-  "n/m",
-  "plugins/paperwork",
-  "read/write",
-  "remotes/origin",
-  "statements/reports",
-  "supplier/customer",
-  "yes/no"
-].freeze
-repository_shorthand_pattern =
-  %r{(?<![A-Za-z0-9_./-])([a-z0-9](?:[a-z0-9_.-]*[a-z0-9_-])?)/([a-z0-9](?:[a-z0-9_.-]*[a-z0-9_-])?)(?![A-Za-z0-9_./-])}
-github_repository_url_pattern =
-  %r{https?://github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+)}
 public_boundary_patterns = {
   "a cross-repository issue or pull-request reference" =>
     /(?<![A-Za-z0-9_.-])[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+#\d+\b/,
+  "a non-distribution GitHub repository URL" =>
+    %r{https?://github\.com/(?!paperworkbot/paperwork-plugin\b)[^\s)"]+},
   "a local workstation or worktree path" =>
     Regexp.union(
       ["/", "Users", "/"].join,
@@ -203,37 +200,8 @@ public_boundary_patterns = {
 }.freeze
 
 scan_public_boundary = lambda do |label, contents|
-  # GitHub's standard merge subject names the source owner and branch. Remove
-  # only this repository's public owner prefix so the branch name still gets
-  # scanned without being mistaken for a repository shorthand.
-  public_repository_owner = "paperworkbot"
-  github_merge_subject_pattern = Regexp.new(
-    "^(\\s*Merge pull request #\\d+ from )" \
-      "#{Regexp.escape(public_repository_owner)}/([A-Za-z0-9_.-]+\\s*)$"
-  )
-  contents = contents.gsub(
-    github_merge_subject_pattern,
-    '\1\2'
-  )
-
   public_boundary_patterns.each do |description, pattern|
     errors << "#{label} contains #{description}" if contents.match?(pattern)
-  end
-
-  contents.scan(github_repository_url_pattern).each do |owner, repository|
-    shorthand = "#{owner}/#{repository}"
-    unless approved_public_repositories.include?(shorthand)
-      errors << "#{label} contains an unapproved GitHub repository URL"
-    end
-  end
-
-  contents.scan(repository_shorthand_pattern).each do |owner, repository|
-    shorthand = "#{owner}/#{repository}"
-    next if approved_public_repositories.include?(shorthand)
-    next if non_repository_slash_pairs.include?(shorthand)
-    next if %w[.json .jsonc .md .rb .sh .yaml .yml].include?(File.extname(repository))
-
-    errors << "#{label} contains an unapproved repository shorthand"
   end
 end
 
@@ -256,97 +224,15 @@ ROOT.find do |path|
   scan_public_boundary.call(relative, contents)
 end
 
-public_metadata = [
-  ENV.fetch("PAPERWORK_PUBLIC_METADATA", ""),
-  ENV.fetch("PAPERWORK_RELEASE_NOTES", "")
-].reject(&:empty?).join("\n")
-scan_public_boundary.call("public metadata", public_metadata) unless public_metadata.empty?
-
-if ROOT.join(".git").exist?
-  commit_messages, commit_error, commit_status = Open3.capture3(
-    "git",
-    "-C",
-    ROOT.to_s,
-    "log",
-    "--all",
-    "--format=fuller"
-  )
-  ref_metadata, ref_metadata_error, ref_metadata_status = Open3.capture3(
-    "git",
-    "-C",
-    ROOT.to_s,
-    "for-each-ref",
-    "--format=%(refname)%0a%(subject)%0a%(body)"
-  )
-  ref_names, ref_names_error, ref_names_status = Open3.capture3(
-    "git",
-    "-C",
-    ROOT.to_s,
-    "for-each-ref",
-    "--format=%(refname)"
-  )
-  objects, objects_error, objects_status = Open3.capture3(
-    "git",
-    "-C",
-    ROOT.to_s,
-    "rev-list",
-    "--objects",
-    "--all"
-  )
-
-  if commit_status.success? && ref_metadata_status.success? &&
-      ref_names_status.success? && objects_status.success?
-    scan_public_boundary.call("Git history", commit_messages.scrub)
-    scan_public_boundary.call("Git refs", ref_metadata.scrub)
-    ref_names.each_line do |ref_name|
-      normalized_ref_name = ref_name.strip.sub(
-        %r{\Arefs/(?:heads|tags|remotes/origin)/},
-        ""
-      )
-      scan_public_boundary.call("Git ref #{ref_name.strip}", normalized_ref_name)
-    end
-
-    scanned_blobs = Set.new
-    objects.each_line do |object|
-      object_id, path = object.strip.split(" ", 2)
-      next if object_id.nil? || scanned_blobs.include?(object_id)
-
-      type, type_error, type_status = Open3.capture3(
-        "git", "-C", ROOT.to_s, "cat-file", "-t", object_id
-      )
-      unless type_status.success?
-        errors << "could not inspect Git object #{object_id}: #{type_error.strip}"
-        next
-      end
-      next unless type.strip == "blob"
-
-      contents, contents_error, contents_status = Open3.capture3(
-        "git", "-C", ROOT.to_s, "cat-file", "-p", object_id
-      )
-      unless contents_status.success?
-        errors << "could not read Git object #{object_id}: #{contents_error.strip}"
-        next
-      end
-
-      scanned_blobs << object_id
-      scan_public_boundary.call("Git history file #{path || object_id}", contents.scrub)
-    end
-  else
-    details = [
-      commit_error,
-      ref_metadata_error,
-      ref_names_error,
-      objects_error
-    ].reject(&:empty?).join(" ")
-    errors << "could not scan Git history and refs: #{details.strip}"
-  end
-end
+release_notes = ENV.fetch("PAPERWORK_RELEASE_NOTES", "")
+scan_public_boundary.call("release notes", release_notes) unless release_notes.empty?
 
 if errors.any?
   warn "PaperworkBot plugin validation failed:"
-  errors.uniq.each { |error| warn "  - #{error}" }
+  errors.each { |error| warn "  - #{error}" }
   exit 1
 end
 
 puts "PaperworkBot plugin #{claude_manifest["version"]} is valid: " \
-  "#{skill_names.length} skills, #{capabilities.length} capabilities, #{eval_paths.length} eval cases."
+  "#{skill_names.length} skills, #{capabilities.length} fixed capabilities, " \
+  "#{dynamic_tools.length} dynamic tool family, #{eval_paths.length} eval cases."

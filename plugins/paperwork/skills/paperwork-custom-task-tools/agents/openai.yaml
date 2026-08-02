@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Custom Task Tools"
+  short_description: "Run approved account-specific Paperwork tools"
+  default_prompt: "Use $paperwork-custom-task-tools to discover and run an approved direct custom task on a Paperwork workflow."

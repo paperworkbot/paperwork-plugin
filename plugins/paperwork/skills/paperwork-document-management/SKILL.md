@@ -14,6 +14,9 @@ when the user needs the artifact. Read
 1. Load [paperwork-account-guide](../paperwork-account-guide/SKILL.md) when
    filtering by document type, state, resolution, agent, or variant.
 2. Choose the narrowest lookup:
+   - attachment ID returned by upload: use
+     [paperwork-processing](../paperwork-processing/SKILL.md) and
+     `attachments_get` until a paperwork reference is available;
    - known `PW-` paperwork reference without workflow context:
      `paperworks_get`;
    - account search by text, type, state, contact, workflow, agent, or dates:
@@ -58,7 +61,8 @@ Before upload, present:
 - whether normal processing will start.
 
 After authorization, upload one bounded file at a time and verify attachment
-and paperwork state through `context_get` or `paperworks_lookup`.
+and paperwork state through `attachments_get`, then `paperworks_get` when
+`ready_for_read` is true.
 
 ## Resolve Or Reprocess
 

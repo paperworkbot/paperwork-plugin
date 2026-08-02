@@ -59,6 +59,31 @@ class ValidatePluginTest < Minitest::Test
     end
   end
 
+  def test_accepts_standard_github_merge_metadata_for_this_repository
+    with_clone do |repository|
+      git(repository, "switch", "-c", "safe-branding")
+      File.open(File.join(repository, "README.md"), "a") do |file|
+        file.puts("\nBranding metadata.")
+      end
+      git(repository, "add", "README.md")
+      git(repository, "commit", "-m", "Add branding metadata")
+      git(repository, "switch", "main")
+      merge_source = ["paperworkbot", "safe-branding"].join("/")
+      git(
+        repository,
+        "merge",
+        "--no-ff",
+        "safe-branding",
+        "-m",
+        "Merge pull request #1 from #{merge_source}"
+      )
+
+      _stdout, stderr, status = run_validator(repository)
+
+      assert status.success?, stderr
+    end
+  end
+
   private
 
   def with_clone

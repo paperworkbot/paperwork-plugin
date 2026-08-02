@@ -68,6 +68,17 @@ unless codex_manifest["skills"] == "./skills/"
   errors << "Codex manifest must use the shared ./skills/ tree"
 end
 
+brand_asset = "./assets/paperwork-icon.svg"
+unless codex_manifest.dig("interface", "brandColor") == "#EA473C"
+  errors << "Codex manifest must declare the Paperwork brand color"
+end
+%w[composerIcon logo logoDark].each do |field|
+  unless codex_manifest.dig("interface", field) == brand_asset
+    errors << "Codex manifest #{field} must point at #{brand_asset}"
+  end
+end
+errors << "missing #{brand_asset}" unless PLUGIN.join(brand_asset.delete_prefix("./")).file?
+
 claude_server = mcp.dig("mcpServers", "paperwork") || {}
 unless claude_server["url"] == "https://paperwork.bot/mcp"
   errors << "managed-cloud MCP URL must use the Paperwork HTTPS endpoint"

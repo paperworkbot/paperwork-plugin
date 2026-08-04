@@ -57,6 +57,21 @@ capabilities:
     mode: write
     scope: workflow
     skills: [paperwork-process-management, paperwork-intake]
+  processes.await:
+    mcp: processes_await
+    mode: read
+    scope: workflow
+    skills: [paperwork-process-management, paperwork-intake]
+  processes.assign_list:
+    mcp: processes_assign_list
+    mode: write
+    scope: workflow
+    skills: [paperwork-process-management]
+  boards.list:
+    mcp: boards_list
+    mode: read
+    scope: account
+    skills: [paperwork-triage, paperwork-process-management]
   tasks.create:
     mcp: tasks_create
     mode: write
@@ -97,6 +112,16 @@ capabilities:
     mode: read
     scope: account
     skills: [paperwork-task-work, paperwork-document-management]
+  paperworks.pages:
+    mcp: paperworks_pages
+    mode: read
+    scope: account
+    skills: [paperwork-document-management, paperwork-task-work]
+  paperworks.update_field:
+    mcp: paperworks_update_field
+    mode: write
+    scope: account
+    skills: [paperwork-document-management, paperwork-task-work]
   contacts.search:
     mcp: contacts_search
     mode: read
@@ -117,6 +142,11 @@ capabilities:
     mode: read
     scope: account
     skills: [paperwork-triage, paperwork-task-work]
+  tasks.defer:
+    mcp: tasks_defer
+    mode: write
+    scope: account
+    skills: [paperwork-task-work]
   tasks.respond:
     mcp: tasks_respond
     mode: write

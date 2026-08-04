@@ -1,7 +1,7 @@
 {
   "name": "paperwork",
   "description": "PaperworkBot operates your Paperwork account from a local agent: triage queues, manage tasks and workflows, intake files through processing and extraction, investigate contacts and documents, run approved custom tools, and resolve paperwork through a permission-scoped MCP connection.",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "author": {
     "name": "Kaytos, LLC",
     "url": "https://paperwork.bot"

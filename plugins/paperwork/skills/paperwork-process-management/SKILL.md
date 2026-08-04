@@ -49,9 +49,30 @@ Read [Paperwork agent safety](../paperwork/references/safety.md) before writes.
 - **State:** use `processes_set_status` with `open`, `on_hold`, `completed`, or
   `cancelled`. Explain any hold reason. Completion and cancellation are
   terminal; confirm the exact state and target.
+- **Board position:** call `boards_list` to see the boards, columns, and where
+  work currently sits, then `processes_assign_list` to move a workflow to a
+  column, or off the board with `list_id: "none"`. This changes where the work
+  appears for everyone, so name the source and destination column before
+  writing.
 
 After every write, call `context_get` or `processes_history` and report the
 observed state and resulting activity.
+
+## Watch An Agent Turn
+
+`processes_message` starts an agent turn but returns immediately. To see what
+the agent does:
+
+1. Keep the `cursor` from the previous `processes_await` call, or omit it the
+   first time.
+2. Call `processes_await` with `after_event_reference` set to that cursor. It
+   returns immediately with `agent_working`, `settled`, `new_events`,
+   `actionable_tasks`, and a fresh cursor.
+3. Repeat while `settled` is false, pacing your own polling — the call never
+   blocks, so a tight loop only wastes calls.
+4. Stop when `settled` is true, or when `blocked_by_review` or
+   `actionable_tasks` shows the agent is waiting on a person. Report the new
+   events and whatever now needs a human.
 
 ## Mixed Workflow Requests
 

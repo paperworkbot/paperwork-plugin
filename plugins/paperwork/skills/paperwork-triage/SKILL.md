@@ -19,6 +19,12 @@ Survey the queues, prioritize what matters, and remain read-only.
    large queues instead of enumerating them.
 6. Call `tasks_get` only for the few highest-priority or ambiguous tasks whose
    detail changes the recommendation.
+7. Call `boards_list` when the user asks how work is laid out, or which column
+   or board something is sitting in.
+
+For a "what changed since last time" check, pass `updated_after` or
+`created_after` with the instant you last looked and `sort: "recently_updated"`
+or `sort: "newest"`. That returns only the delta instead of the whole queue.
 
 ## Priority
 
@@ -45,7 +51,8 @@ prioritized tasks with:
 - one sentence explaining priority.
 
 Recommend the top two or three and ask which one to work. Route a selection to
-[paperwork-task-work](../paperwork-task-work/SKILL.md).
+[paperwork-task-work](../paperwork-task-work/SKILL.md), which also owns handing
+a task to someone else.
 
 ## Rules
 

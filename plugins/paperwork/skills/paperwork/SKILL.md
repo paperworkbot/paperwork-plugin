@@ -54,6 +54,8 @@ selection, capability requirements, or token scope is unclear.
   reprocess, create, or change state during review or triage.
 - Use references returned by Paperwork. Never invent a `PW-`, `TASK-`,
   `CONTACT-`, attachment id, agent key, type key, action, or role.
+- Name a task action by its `button_text` label. Keep action identifiers such
+  as `complete$$approved` out of every text the user reads.
 - Re-read the concrete target immediately before a material write.
 - Explicit user authorization for an exact action is sufficient. New targets,
   changed arguments, surprises, or broader effects require a new confirmation.

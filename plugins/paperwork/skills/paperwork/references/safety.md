@@ -69,6 +69,24 @@ arguments, risk, or expected effect.
 Do not turn one approval into permission for unrelated records, bulk writes, or
 future actions.
 
+## Naming Actions
+
+`available_actions` gives each action an `action` identifier and a `button_text`
+label. The identifier is an internal wire value. It can contain a `$$`
+separator, for example `complete$$approved`.
+
+- Send the exact identifier to `tasks_respond`, or send the exact `button_text`.
+  Both are accepted.
+- Write only the label in text the user reads. Use `button_text` verbatim, for
+  example "Approve" or "Mark rejected".
+- Add the effect when the label alone does not show it. For example: "Mark
+  rejected: this rejects the task and hands the workflow back to the agent."
+- Say that an action is terminal when it completes, rejects, or cancels a task.
+- Never put an identifier, a `$$` separator, a state transition, or a raw
+  resolution key into a title, summary, recommendation, note, or message that
+  refers to a task action. A vocabulary catalog from `account_describe` may
+  still list raw keys, because those keys are the subject of that answer.
+
 ## Capability And Record Scope
 
 A token limits which capabilities may run. It does not narrow which records

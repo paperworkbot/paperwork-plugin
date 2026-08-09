@@ -21,6 +21,8 @@ jobs:
         env:
           PAPERWORK_RELEASE_NOTES: ${{ github.event.release.body || '' }}
         run: ruby scripts/validate-plugin.rb
+      - name: Test release validation
+        run: ruby scripts/validate-plugin_test.rb
       - name: Exercise the OpenCode installer
         run: |
           destination="$RUNNER_TEMP/paperwork-opencode/skills"

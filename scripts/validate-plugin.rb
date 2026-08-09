@@ -220,7 +220,7 @@ ROOT.find do |path|
   next unless path.file?
 
   relative = path.relative_path_from(ROOT).to_s
-  next if relative.start_with?(".git/")
+  next if relative == ".git" || relative.start_with?(".git/")
 
   if path.executable? && !allowed_executables.include?(relative)
     errors << "unexpected executable component: #{relative}"

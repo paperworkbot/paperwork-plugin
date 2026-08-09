@@ -1,6 +1,6 @@
 {
   "name": "paperwork",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "PaperworkBot operates your Paperwork account from a local agent: triage queues, manage tasks and workflows, intake files through processing and extraction, investigate contacts and documents, run approved custom tools, and resolve paperwork through a permission-scoped MCP connection.",
   "author": {
     "name": "Kaytos, LLC",
@@ -36,6 +36,7 @@
     "logoDark": "./assets/paperwork-icon.svg",
     "defaultPrompt": [
       "What needs my attention in Paperwork?",
+      "Summarize work older than seven days and prepare reviewable recommendations.",
       "Show my active Paperwork workflows and what each is waiting on.",
       "Help me intake these files, wait for extraction, and show me what Paperwork found."
     ]

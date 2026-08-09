@@ -75,7 +75,7 @@ unattended automation.
 | `paperwork` | Routes broad requests and mixed workflows |
 | `paperwork-setup` | Installs, connects, diagnoses, rotates, and removes |
 | `paperwork-account-guide` | Discovers account vocabulary and allowed values |
-| `paperwork-triage` | Prioritizes personal, role, and held task queues |
+| `paperwork-triage` | Summarizes task backlogs and prepares reviewable recommendations for personal, role, and held queues |
 | `paperwork-task-work` | Investigates and operates one task end to end |
 | `paperwork-process-management` | Searches, creates, annotates, messages, and changes workflows |
 | `paperwork-document-management` | Searches, inspects, reads, downloads, resolves, and reprocesses paperwork |
@@ -85,8 +85,8 @@ unattended automation.
 | `paperwork-document-lookup` | Reconciles one or many document identifiers |
 | `paperwork-custom-task-tools` | Discovers, invokes, and polls administrator-approved account-specific tools |
 
-The current release intentionally covers all 33 operations exposed by the
-fixed Paperwork MCP capability catalog plus opt-in direct custom-task tools.
+The current release intentionally covers the complete fixed Paperwork MCP
+capability catalog plus opt-in direct custom-task tools.
 It does not administer accounts, users, agents, custom-task definitions,
 integrations, secrets, or arbitrary code.
 

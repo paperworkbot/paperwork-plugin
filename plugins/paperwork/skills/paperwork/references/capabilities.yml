@@ -137,6 +137,11 @@ capabilities:
     mode: read
     scope: account
     skills: [paperwork-triage, paperwork-task-work]
+  tasks.summary:
+    mcp: tasks_summary
+    mode: read
+    scope: account
+    skills: [paperwork-triage]
   tasks.get:
     mcp: tasks_get
     mode: read
@@ -177,6 +182,16 @@ capabilities:
     mode: write
     scope: account
     skills: [paperwork-task-work]
+  triage_runs.create:
+    mcp: triage_runs_create
+    mode: write
+    scope: account
+    skills: [paperwork-triage]
+  triage_runs.get:
+    mcp: triage_runs_get
+    mode: read
+    scope: account
+    skills: [paperwork-triage]
   paperworks.lookup:
     mcp: paperworks_lookup
     mode: read

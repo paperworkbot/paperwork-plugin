@@ -39,7 +39,8 @@ applies the user's Paperwork permissions on every call.
 Read-only account discovery, triage, relationship review, document lookup,
 workflow history, upload progress, bounded document reading, and downloads:
 
-`account.describe`, `tasks.list`, `tasks.get`, `contacts.search`,
+`account.describe`, `tasks.summary`, `tasks.list`, `tasks.get`,
+`triage_runs.get`, `contacts.search`,
 `contacts.lookup`, `processes.search`, `processes.history`, `context.get`,
 `records.lookup`, `paperworks.search`, `paperworks.get`,
 `paperworks.find_by_identifier`, `paperworks.lookup`,
@@ -50,7 +51,7 @@ workflow history, upload progress, bounded document reading, and downloads:
 
 Observe plus reversible collaborative operations:
 
-`tasks.claim`, `tasks.note`, `tasks.hold`, `tasks.resume`,
+`triage_runs.create`, `tasks.claim`, `tasks.note`, `tasks.hold`, `tasks.resume`,
 `processes.note`, `processes.message`, and `contacts.assign_role`.
 
 ### Operate

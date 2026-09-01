@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Check-in"
+  short_description: "Summarize daily work and blockers"
+  default_prompt: "Use $paperwork-check-in to give me a read-only Paperwork status report with priorities, blockers, and next steps."

@@ -75,7 +75,8 @@ unattended automation.
 | `paperwork` | Routes broad requests and mixed workflows |
 | `paperwork-setup` | Installs, connects, diagnoses, rotates, and removes |
 | `paperwork-account-guide` | Discovers account vocabulary and allowed values |
-| `paperwork-triage` | Summarizes task backlogs and prepares reviewable recommendations for personal, role, and held queues |
+| `paperwork-check-in` | Produces read-only daily status, priorities, blockers, and next steps |
+| `paperwork-triage` | Prepares and applies guarded recommendation plans for filtered task cohorts |
 | `paperwork-task-work` | Investigates and operates one task end to end |
 | `paperwork-process-management` | Searches, creates, annotates, messages, and changes workflows |
 | `paperwork-document-management` | Searches, inspects, reads, downloads, resolves, and reprocesses paperwork |

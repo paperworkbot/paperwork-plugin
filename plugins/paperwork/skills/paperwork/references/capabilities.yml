@@ -12,6 +12,11 @@ capabilities:
     mode: read
     scope: account
     skills: [paperwork-account-guide]
+  account.snapshot:
+    mcp: account_snapshot
+    mode: read
+    scope: account
+    skills: [paperwork-account-guide, paperwork-check-in, paperwork-triage]
   context.get:
     mcp: context_get
     mode: read
@@ -132,21 +137,26 @@ capabilities:
     mode: write
     scope: workflow
     skills: [paperwork-process-management, paperwork-intake]
+  learnings.suggest:
+    mcp: learnings_suggest
+    mode: write
+    scope: workflow
+    skills: [paperwork-process-management]
   tasks.list:
     mcp: tasks_list
     mode: read
     scope: account
-    skills: [paperwork-triage, paperwork-task-work]
+    skills: [paperwork-check-in, paperwork-triage, paperwork-task-work]
   tasks.summary:
     mcp: tasks_summary
     mode: read
     scope: account
-    skills: [paperwork-triage]
+    skills: [paperwork-check-in, paperwork-triage]
   tasks.get:
     mcp: tasks_get
     mode: read
     scope: account
-    skills: [paperwork-triage, paperwork-task-work]
+    skills: [paperwork-check-in, paperwork-triage, paperwork-task-work]
   tasks.defer:
     mcp: tasks_defer
     mode: write
@@ -190,6 +200,16 @@ capabilities:
   triage_runs.get:
     mcp: triage_runs_get
     mode: read
+    scope: account
+    skills: [paperwork-triage]
+  triage_runs.prepare_apply:
+    mcp: triage_runs_prepare_apply
+    mode: write
+    scope: account
+    skills: [paperwork-triage]
+  triage_runs.apply:
+    mcp: triage_runs_apply
+    mode: write
     scope: account
     skills: [paperwork-triage]
   paperworks.lookup:

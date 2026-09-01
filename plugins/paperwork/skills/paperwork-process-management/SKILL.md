@@ -1,6 +1,6 @@
 ---
 name: paperwork-process-management
-description: Search, inspect, create, message, annotate, and change the status of Paperwork processes over MCP. Use when the user asks about workflows or processes, wants to start one, give its agent instructions, add a note or follow-up task, assign a contact role, put work on hold, reopen it, complete it, or cancel it.
+description: Search, inspect, create, message, annotate, suggest durable learnings from, and change the status of Paperwork processes over MCP. Use when the user asks about workflows or processes, wants to start one, give its agent instructions, propose a reusable contact rule, add a note or follow-up task, assign a contact role, put work on hold, reopen it, complete it, or cancel it.
 ---
 
 # Paperwork Process Management
@@ -44,6 +44,13 @@ Read [Paperwork agent safety](../paperwork/references/safety.md) before writes.
 - **Contact role:** resolve an existing `CONTACT-` reference, confirm the
   account-defined role from `account_describe`, then use
   `contacts_assign_role`. Never mutate the contact record itself.
+- **Reusable learning:** use `learnings_suggest` only for a durable rule evidenced by the
+  current workflow. Prefer contact scope for supplier-specific identifiers, layouts, mappings,
+  or row conventions; use agent scope only when the rule truly applies to every workflow. State
+  the exact proposed text and scope before writing. The connection needs the explicit capability,
+  and the acting user must be able to read the source workflow. The result is inactive and
+  requires an agent editor's review in Manage Agents → Learnings; never tell the user it is
+  already applied or deterministic.
 - **Follow-up work:** use `tasks_create` with clear instructions and an exact
   account role or user assignment.
 - **State:** use `processes_set_status` with `open`, `on_hold`, `completed`, or

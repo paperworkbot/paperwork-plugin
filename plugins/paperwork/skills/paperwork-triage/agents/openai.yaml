@@ -1,4 +1,4 @@
 interface:
-  display_name: "Paperwork Triage"
-  short_description: "Prioritize your Paperwork task queue"
-  default_prompt: "Use $paperwork-triage to show me what needs attention in Paperwork."
+  display_name: "Paperwork Triage Plans"
+  short_description: "Prepare and apply reviewed task plans"
+  default_prompt: "Use $paperwork-triage to prepare a durable recommendation plan for my overdue Paperwork tasks."

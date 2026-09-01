@@ -67,6 +67,10 @@ end
 unless codex_manifest["skills"] == "./skills/"
   errors << "Codex manifest must use the shared ./skills/ tree"
 end
+default_prompts = codex_manifest.dig("interface", "defaultPrompt")
+unless default_prompts.is_a?(Array) && default_prompts.length.between?(1, 3)
+  errors << "Codex manifest must declare between one and three default prompts"
+end
 
 brand_asset = "./assets/paperwork-icon.svg"
 unless codex_manifest.dig("interface", "brandColor") == "#EA473C"

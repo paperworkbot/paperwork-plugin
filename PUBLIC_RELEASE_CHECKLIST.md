@@ -25,3 +25,10 @@ Before publishing:
 3. Scan for credentials with a secret scanner.
 4. Confirm the distribution tree exactly matches the reviewed source package.
 5. Verify the release from its public URL after publication.
+
+Source validation, deployed service checks, and an existing client install
+are separate evidence. Record the public release version, installed version,
+and live capability discovery independently; never claim publication from a
+cached install. Run `ruby scripts/validate-plugin_test.rb` alongside the
+validator. Behavioral prompts and graders under `plugins/paperwork/evals`
+must be exercised separately; their presence is not a passing evaluation.

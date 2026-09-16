@@ -17,10 +17,23 @@ Do not guess keys from display labels or examples.
    - document and workflow resolutions;
    - account roles and task queues;
    - visible agents, their keys, and their contact roles; and
-   - supported download variants.
-3. Select only values needed by the user's request. Preserve machine keys in
+   - supported download variants;
+   - token-filtered `capabilities` entries (`name`, `read_only`,
+     `requires_workflow`, `description`); and
+   - `operating_contract`, including client-owned reasoning and server authority.
+3. Read the live tool schema before calling a capability. The bundled map
+   routes work; it does not grant access or prove a deployment supports a tool.
+   Discover account-specific direct tools from the live MCP catalog as well.
+4. For account data analysis, use `data_describe` to discover authorized relations,
+   fields, default projections, and filter operators. Account vocabulary does not
+   define the data schema or grant `data.scan` or the separate `data.export`.
+   Continue with [paperwork-account-data](../paperwork-account-data/SKILL.md).
+5. Use `contacts_lookup` for existing local contacts, including name searches
+   without a workflow. It does not import directory records or start a hosted
+   contact resolver. No match is not permission to create or import a contact.
+6. Select only values needed by the user's request. Preserve machine keys in
    tool arguments and use display labels in the explanation.
-4. If the requested type, agent, role, state, or variant is unavailable, say
+7. If the requested type, agent, role, state, or variant is unavailable, say
    so and offer the nearest valid choices. Do not silently substitute one.
 
 ## Output

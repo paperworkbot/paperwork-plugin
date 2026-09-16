@@ -40,6 +40,9 @@ Check `content_access.kind` in the dossier first:
   filters must come from the file, never from a model reading it.
   `paperworks_read` refuses these by design. Multi-sheet workbooks list every
   sheet; pass `sheet` to pick one.
+- **many files at once:** `attachments_bulk_download` returns ten-minute URLs for
+  every original file on the given workflows or documents; download them
+  locally rather than reading each document through the API.
 - **large_document** (beyond the direct-read page cap): download the `pdf` or
   `text` variant and work locally. Use `paperworks_query_rows` when the plan
   lists indexed collections — that is exact, filtered row access on the server.

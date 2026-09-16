@@ -39,7 +39,8 @@ required_files = [
   opencode_v1_path,
   opencode_v2_path,
   capability_map_path,
-  ROOT.join("scripts/install-opencode.sh")
+  ROOT.join("scripts/install-opencode.sh"),
+  SKILLS.join("paperwork-account-data/scripts/assemble_export.py")
 ]
 required_files.each do |path|
   errors << "missing #{path.relative_path_from(ROOT)}" unless path.file?
@@ -57,6 +58,10 @@ errors << "Claude manifest name must be paperwork" unless claude_manifest["name"
 errors << "Codex manifest name must be paperwork" unless codex_manifest["name"] == "paperwork"
 unless claude_manifest["version"] == codex_manifest["version"]
   errors << "Claude and Codex manifest versions differ"
+end
+unless marketplace.dig("plugins", 0, "version") == claude_manifest["version"] &&
+    capability_map["plugin_version"] == claude_manifest["version"]
+  errors << "marketplace and capability catalog versions must match the manifests"
 end
 unless claude_manifest["version"].to_s.match?(/\A\d+\.\d+\.\d+\z/)
   errors << "manifest version must be a stable semantic version"
@@ -162,6 +167,9 @@ unless direct_custom_tasks["run_status_mcp"] == "custom_task_runs_get"
 end
 unless direct_custom_tasks["mode"] == "write" && direct_custom_tasks["scope"] == "workflow"
   errors << "direct custom tasks must be workflow-scoped writes"
+end
+unless direct_custom_tasks["account_scope_when_enabled"] == true
+  errors << "direct custom tasks must declare account_scope_when_enabled"
 end
 Array(direct_custom_tasks["skills"]).each do |skill_name|
   errors << "direct custom tasks reference missing skill #{skill_name}" unless skill_names.include?(skill_name)

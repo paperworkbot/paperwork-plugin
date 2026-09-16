@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Statement Reconciliation"
+  short_description: "Reconcile a local statement against Paperwork"
+  default_prompt: "Use $paperwork-statement-reconciliation to reconcile this statement file against Paperwork and our system of record without starting a workflow."

@@ -1,12 +1,111 @@
 version: 1
+plugin_version: "0.11.0"
 dynamic_tools:
   direct_custom_tasks:
     mcp_pattern: "custom_task_*"
     run_status_mcp: custom_task_runs_get
     mode: write
     scope: workflow
-    skills: [paperwork-custom-task-tools]
+    # A task an administrator opened to account runs also accepts a call with
+    # no process_reference; batch reconciliation workers accept only that form.
+    account_scope_when_enabled: true
+    skills: [paperwork-custom-task-tools, paperwork-statement-reconciliation]
 capabilities:
+  data.describe:
+    mcp: data_describe
+    mode: read
+    scope: account
+    skills: [paperwork-account-data, paperwork-account-guide]
+  data.scan:
+    mcp: data_scan
+    mode: read
+    scope: account
+    skills: [paperwork-account-data]
+  data.export:
+    mcp: data_export
+    mode: read
+    scope: account
+    skills: [paperwork-account-data]
+  processes.summary:
+    mcp: processes_summary
+    mode: read
+    scope: account
+    skills: [paperwork-process-management, paperwork-contact-history]
+  processes.update_metadata:
+    mcp: processes_update_metadata
+    mode: write
+    scope: workflow
+    skills: [paperwork-agent-operations, paperwork-process-management]
+  contacts.get:
+    mcp: contacts_get
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations, paperwork-contact-history]
+  contacts.create:
+    mcp: contacts_create
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  contacts.update:
+    mcp: contacts_update
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  tasks.bulk:
+    mcp: tasks_bulk
+    mode: write
+    scope: account
+    skills: [paperwork-task-work, paperwork-triage]
+  processes.bulk_update:
+    mcp: processes_bulk_update
+    mode: write
+    scope: account
+    skills: [paperwork-process-management]
+  attachments.bulk_download:
+    mcp: attachments_bulk_download
+    mode: read
+    scope: account
+    skills: [paperwork-document-management, paperwork-process-management]
+  agents.list:
+    mcp: agents_list
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations, paperwork-account-guide]
+  agents.get:
+    mcp: agents_get
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations]
+  agents.update_instructions:
+    mcp: agents_update_instructions
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  sops.list:
+    mcp: sops_list
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations]
+  sops.get:
+    mcp: sops_get
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations]
+  sops.create:
+    mcp: sops_create
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  sops.update:
+    mcp: sops_update
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  sops.archive:
+    mcp: sops_archive
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
   account.describe:
     mcp: account_describe
     mode: read

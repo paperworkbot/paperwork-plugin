@@ -20,6 +20,9 @@ Read [Paperwork agent safety](../paperwork/references/safety.md) before writes.
    stalled, completed, or cancelled, and before any material write.
 4. For contact-centered work, resolve with `contacts_search` or
    `contacts_lookup`, then filter `processes_search` by `contact_reference`.
+5. Use `processes_summary` when the complete cohort count and age, state,
+   assignee, or agent breakdown matters. Use `processes_search` for a bounded
+   sample; do not page through every workflow merely to count it.
 
 ## Create A Workflow
 
@@ -88,9 +91,15 @@ and close the ones that finish":
 
 1. search and summarize all candidates without writing;
 2. identify exact targets and distinct actions;
-3. obtain authorization for the bounded batch;
-4. process one workflow at a time with readback; and
-5. stop if one target differs materially from the reviewed plan.
+3. obtain authorization for the bounded batch, naming the exact workflows and
+   the status, assignee, list, or note that will apply;
+4. apply one change to the whole batch with `processes_bulk_update` (up to 100
+   workflows), then read its per-workflow results and report any failures;
+5. use single-workflow tools for anything the batch tool does not cover; and
+6. stop if one target differs materially from the reviewed plan.
+
+To hand the user every original file on a set of workflows, call
+`attachments_bulk_download` and download the returned URLs within ten minutes.
 
 Do not infer that "manage these" authorizes completion, cancellation, or an
 agent message.

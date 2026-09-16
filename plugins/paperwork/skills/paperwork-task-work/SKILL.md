@@ -63,6 +63,10 @@ action.
   off your queue, so confirm the person and the reason first.
 - **Task action:** call `tasks_respond` with an exact current action identifier
   or its exact `button_text`, and only declared input-field keys.
+- **Several tasks at once:** when the user asks to resolve, note, claim, hold,
+  or resume a group of tasks the same way, list the exact task references and
+  the action, obtain confirmation, then call `tasks_bulk` once (up to 100 tasks)
+  and report its per-task results, including any that failed.
 
 For a task action, present:
 

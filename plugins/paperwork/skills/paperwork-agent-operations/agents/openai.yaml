@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Agent Operations"
+  short_description: "Edit profiles and coordinate workflow execution"
+  default_prompt: "Use $paperwork-agent-operations to perform the requested profile or workflow operation within my current connection permissions."

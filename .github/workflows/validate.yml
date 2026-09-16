@@ -23,6 +23,8 @@ jobs:
         run: ruby scripts/validate-plugin.rb
       - name: Test release validation
         run: ruby scripts/validate-plugin_test.rb
+      - name: Test local account-data export assembly
+        run: python3 -B scripts/assemble-export_test.py
       - name: Exercise the OpenCode installer
         run: |
           destination="$RUNNER_TEMP/paperwork-opencode/skills"

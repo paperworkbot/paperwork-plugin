@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Account Data"
+  short_description: "Query account data and verify local exports"
+  default_prompt: "Use $paperwork-account-data to analyze authorized account data and report query coverage."

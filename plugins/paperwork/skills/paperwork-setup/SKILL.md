@@ -48,6 +48,14 @@ them automatically.
   disabled user.
 - **Forbidden on one tool:** connection is healthy, but the token ceiling or
   acting user's current Paperwork permission denies that capability.
+- **New tools missing after an upgrade:** an OAuth access token snapshots the
+  registry when issued. Refresh or reconnect, then rediscover tools. OAuth
+  consent is broad MCP access as the user; issuance and refresh use the current
+  registry, subject to current user permissions. Manual tokens instead need
+  explicit capability grants. Same-grant refresh preserves run continuity;
+  fresh authorization may create a new connection. Retain pending run
+  references and resolve continuity before replacing their owning connection.
+  Neither refresh nor reconnect bypasses a role or record-access denial.
 - **Not found on one record:** do not treat this as connection failure; the
   record may be absent or outside the user's authorized view.
 - **Rate limited:** honor `Retry-After`; do not rotate credentials or retry in a

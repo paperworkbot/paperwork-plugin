@@ -75,6 +75,7 @@ unattended automation.
 | `paperwork` | Routes broad requests and mixed workflows |
 | `paperwork-setup` | Installs, connects, diagnoses, rotates, and removes |
 | `paperwork-account-guide` | Discovers account vocabulary and allowed values |
+| `paperwork-account-data` | Queries account datasets and assembles verified private JSONL exports for local analysis |
 | `paperwork-check-in` | Produces read-only daily status, priorities, blockers, and next steps |
 | `paperwork-triage` | Prepares and applies guarded recommendation plans for filtered task cohorts |
 | `paperwork-task-work` | Investigates and operates one task end to end |
@@ -85,9 +86,10 @@ unattended automation.
 | `paperwork-contact-history` | Reviews one counterparty relationship |
 | `paperwork-document-lookup` | Reconciles one or many document identifiers |
 | `paperwork-custom-task-tools` | Discovers, invokes, and polls administrator-approved account-specific tools |
+| `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, and SOPs with version checks |
 
-The current release intentionally covers the complete fixed Paperwork MCP
-capability catalog plus opt-in direct custom-task tools.
+The source package is version **0.11.0**. Its skills cover the fixed capability
+catalog plus opt-in direct custom-task tools through live discovery.
 It does not administer accounts, users, agents, custom-task definitions,
 integrations, secrets, or arbitrary code.
 

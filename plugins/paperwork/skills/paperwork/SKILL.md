@@ -14,6 +14,7 @@ and target records, then route to the narrowest operational skill.
 | --- | --- |
 | Connect, install, diagnose, or rotate credentials | [paperwork-setup](../paperwork-setup/SKILL.md) |
 | Learn type keys, states, roles, agents, and download variants | [paperwork-account-guide](../paperwork-account-guide/SKILL.md) |
+| Query account datasets, analyze trends or joins, or export rows for local analysis | [paperwork-account-data](../paperwork-account-data/SKILL.md) |
 | Produce a daily, morning, or standup status report | [paperwork-check-in](../paperwork-check-in/SKILL.md) |
 | Filter queues or prepare and apply a durable recommendation plan | [paperwork-triage](../paperwork-triage/SKILL.md) |
 | Investigate and operate one task | [paperwork-task-work](../paperwork-task-work/SKILL.md) |
@@ -22,6 +23,7 @@ and target records, then route to the narrowest operational skill.
 | Create a workflow and upload new paperwork | [paperwork-intake](../paperwork-intake/SKILL.md) |
 | Wait for an upload, inspect extraction, and continue from its result | [paperwork-processing](../paperwork-processing/SKILL.md) |
 | Review one contact's relationship and open work | [paperwork-contact-history](../paperwork-contact-history/SKILL.md) |
+| Edit contacts, workflow details, agent instructions, or SOPs | [paperwork-agent-operations](../paperwork-agent-operations/SKILL.md) |
 | Check whether one or many business identifiers already exist | [paperwork-document-lookup](../paperwork-document-lookup/SKILL.md) |
 | Run an administrator-approved account-specific direct tool | [paperwork-custom-task-tools](../paperwork-custom-task-tools/SKILL.md) |
 
@@ -30,6 +32,8 @@ and target records, then route to the narrowest operational skill.
 1. If Paperwork tools are unavailable or failing, use `paperwork-setup`.
 2. If filters depend on account-specific vocabulary, call `account_describe`
    through `paperwork-account-guide` before searching.
+   Route cross-record data queries, counts, trends, joins, and local dataset
+   exports to `paperwork-account-data`; discover relations with `data_describe`.
 3. Route read-only daily status and backlog-health reports to
    `paperwork-check-in`. Route durable recommendation plans and guarded bulk
    application to `paperwork-triage`; route work on one selected task to

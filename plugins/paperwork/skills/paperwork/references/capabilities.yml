@@ -1,5 +1,5 @@
 version: 1
-plugin_version: "0.11.0"
+plugin_version: "0.14.1"
 dynamic_tools:
   direct_custom_tasks:
     mcp_pattern: "custom_task_*"
@@ -11,6 +11,31 @@ dynamic_tools:
     account_scope_when_enabled: true
     skills: [paperwork-custom-task-tools, paperwork-statement-reconciliation]
 capabilities:
+  task_kinds.list:
+    mcp: task_kinds_list
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations]
+  task_kinds.get:
+    mcp: task_kinds_get
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations]
+  task_kinds.create:
+    mcp: task_kinds_create
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  task_kinds.update:
+    mcp: task_kinds_update
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  task_kinds.archive:
+    mcp: task_kinds_archive
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
   data.describe:
     mcp: data_describe
     mode: read
@@ -30,7 +55,7 @@ capabilities:
     mcp: processes_summary
     mode: read
     scope: account
-    skills: [paperwork-process-management, paperwork-contact-history]
+    skills: [paperwork-process-management, paperwork-contact-history, paperwork-check-in]
   processes.update_metadata:
     mcp: processes_update_metadata
     mode: write
@@ -40,7 +65,7 @@ capabilities:
     mcp: contacts_get
     mode: read
     scope: account
-    skills: [paperwork-agent-operations, paperwork-contact-history]
+    skills: [paperwork-agent-operations, paperwork-contact-history, paperwork-task-work]
   contacts.create:
     mcp: contacts_create
     mode: write
@@ -55,7 +80,7 @@ capabilities:
     mcp: tasks_bulk
     mode: write
     scope: account
-    skills: [paperwork-task-work, paperwork-triage]
+    skills: [paperwork-task-work]
   processes.bulk_update:
     mcp: processes_bulk_update
     mode: write
@@ -75,7 +100,7 @@ capabilities:
     mcp: agents_get
     mode: read
     scope: account
-    skills: [paperwork-agent-operations]
+    skills: [paperwork-agent-operations, paperwork-task-work]
   agents.update_instructions:
     mcp: agents_update_instructions
     mode: write
@@ -90,7 +115,7 @@ capabilities:
     mcp: sops_get
     mode: read
     scope: account
-    skills: [paperwork-agent-operations]
+    skills: [paperwork-agent-operations, paperwork-task-work]
   sops.create:
     mcp: sops_create
     mode: write
@@ -101,8 +126,48 @@ capabilities:
     mode: write
     scope: account
     skills: [paperwork-agent-operations]
+  sops.attach:
+    mcp: sops_attach
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  sops.detach:
+    mcp: sops_detach
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
   sops.archive:
     mcp: sops_archive
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  learnings.list:
+    mcp: learnings_list
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations, paperwork-task-work, paperwork-contact-history]
+  learnings.get:
+    mcp: learnings_get
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations]
+  learnings.create:
+    mcp: learnings_create
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  learnings.update:
+    mcp: learnings_update
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  learnings.review:
+    mcp: learnings_review
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  learnings.promote_to_sop:
+    mcp: learnings_promote_to_sop
     mode: write
     scope: account
     skills: [paperwork-agent-operations]
@@ -115,17 +180,17 @@ capabilities:
     mcp: account_snapshot
     mode: read
     scope: account
-    skills: [paperwork-account-guide, paperwork-check-in, paperwork-triage]
+    skills: [paperwork-check-in, paperwork-triage]
   context.get:
     mcp: context_get
     mode: read
     scope: workflow
-    skills: [paperwork-task-work, paperwork-process-management, paperwork-document-management, paperwork-contact-history, paperwork-document-lookup]
+    skills: [paperwork-task-work, paperwork-process-management, paperwork-document-management, paperwork-contact-history, paperwork-intake]
   contacts.lookup:
     mcp: contacts_lookup
     mode: read
     scope: account
-    skills: [paperwork-task-work, paperwork-process-management, paperwork-intake]
+    skills: [paperwork-process-management, paperwork-intake, paperwork-agent-operations, paperwork-account-guide]
   records.lookup:
     mcp: records_lookup
     mode: read
@@ -171,14 +236,49 @@ capabilities:
     mode: write
     scope: workflow
     skills: [paperwork-process-management]
+  processes.assign_user:
+    mcp: processes_assign_user
+    mode: write
+    scope: workflow
+    skills: [paperwork-process-management]
+  processes.retry_agent:
+    mcp: processes_retry_agent
+    mode: write
+    scope: workflow
+    skills: [paperwork-process-management]
+  boards.move_item:
+    mcp: boards_move_item
+    mode: write
+    scope: account
+    skills: [paperwork-process-management]
+  boards.create_list:
+    mcp: boards_create_list
+    mode: write
+    scope: account
+    skills: [paperwork-process-management]
+  boards.update_list:
+    mcp: boards_update_list
+    mode: write
+    scope: account
+    skills: [paperwork-process-management]
+  boards.delete_list:
+    mcp: boards_delete_list
+    mode: write
+    scope: account
+    skills: [paperwork-process-management]
+  boards.reorder_lists:
+    mcp: boards_reorder_lists
+    mode: write
+    scope: account
+    skills: [paperwork-process-management]
   boards.list:
     mcp: boards_list
     mode: read
     scope: account
     skills: [paperwork-triage, paperwork-process-management]
-  tasks.create:
-    mcp: tasks_create
-    mode: write
+  tasks.kinds:
+    mcp: tasks_kinds
+    mode: read
     scope: workflow
     skills: [paperwork-task-work, paperwork-process-management]
   attachments.upload:
@@ -226,6 +326,11 @@ capabilities:
     mode: write
     scope: account
     skills: [paperwork-document-management, paperwork-task-work]
+  paperworks.approve_extracted_data:
+    mcp: paperworks_approve_extracted_data
+    mode: write
+    scope: account
+    skills: [paperwork-document-management, paperwork-task-work]
   contacts.search:
     mcp: contacts_search
     mode: read
@@ -245,7 +350,7 @@ capabilities:
     mcp: tasks_list
     mode: read
     scope: account
-    skills: [paperwork-check-in, paperwork-triage, paperwork-task-work]
+    skills: [paperwork-check-in, paperwork-triage, paperwork-contact-history]
   tasks.summary:
     mcp: tasks_summary
     mode: read
@@ -291,6 +396,26 @@ capabilities:
     mode: write
     scope: account
     skills: [paperwork-task-work]
+  tasks.precedents:
+    mcp: tasks_precedents
+    mode: read
+    scope: account
+    skills: [paperwork-task-work]
+  tasks.resolve_contact:
+    mcp: tasks_resolve_contact
+    mode: write
+    scope: account
+    skills: [paperwork-task-work]
+  tasks.review_decision:
+    mcp: tasks_review_decision
+    mode: write
+    scope: account
+    skills: [paperwork-task-work]
+  tasks.set_due_date:
+    mcp: tasks_set_due_date
+    mode: write
+    scope: account
+    skills: [paperwork-task-work]
   triage_runs.create:
     mcp: triage_runs_create
     mode: write
@@ -315,24 +440,24 @@ capabilities:
     mcp: paperworks_lookup
     mode: read
     scope: workflow
-    skills: [paperwork-task-work, paperwork-document-management]
+    skills: [paperwork-document-management]
   paperworks.query_rows:
     mcp: paperworks_query_rows
     mode: read
-    scope: workflow
+    scope: account
     skills: [paperwork-task-work, paperwork-document-management]
   paperworks.read:
     mcp: paperworks_read
     mode: read
-    scope: workflow
+    scope: account
     skills: [paperwork-task-work, paperwork-document-management]
   attachments.download:
     mcp: attachments_download
     mode: read
-    scope: workflow
+    scope: account
     skills: [paperwork-document-management]
   paperworks.reprocess:
     mcp: paperworks_reprocess
     mode: write
-    scope: workflow
+    scope: account
     skills: [paperwork-document-management]

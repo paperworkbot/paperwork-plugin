@@ -27,6 +27,7 @@ claude_manifest_path = PLUGIN.join(".claude-plugin/plugin.json")
 codex_manifest_path = PLUGIN.join(".codex-plugin/plugin.json")
 marketplace_path = ROOT.join(".claude-plugin/marketplace.json")
 mcp_path = PLUGIN.join(".mcp.json")
+codex_mcp_path = PLUGIN.join(".codex-mcp.json")
 opencode_v1_path = ROOT.join("opencode.example.jsonc")
 opencode_v2_path = ROOT.join("opencode-v2.example.jsonc")
 capability_map_path = SKILLS.join("paperwork/references/capabilities.yml")
@@ -36,6 +37,7 @@ required_files = [
   codex_manifest_path,
   marketplace_path,
   mcp_path,
+  codex_mcp_path,
   opencode_v1_path,
   opencode_v2_path,
   capability_map_path,
@@ -50,6 +52,7 @@ claude_manifest = read_json.call(claude_manifest_path)
 codex_manifest = read_json.call(codex_manifest_path)
 marketplace = read_json.call(marketplace_path)
 mcp = read_json.call(mcp_path)
+codex_mcp = read_json.call(codex_mcp_path)
 opencode_v1 = read_json.call(opencode_v1_path)
 opencode_v2 = read_json.call(opencode_v2_path)
 capability_map = read_yaml.call(capability_map_path)
@@ -88,15 +91,35 @@ end
 end
 errors << "missing #{brand_asset}" unless PLUGIN.join(brand_asset.delete_prefix("./")).file?
 
+# Claude Code expands ${VAR:-default} in a plugin's .mcp.json, so a
+# self-hosted user sets PAPERWORK_MCP_URL and everyone else gets the cloud.
+# Codex does not expand variables in a plugin MCP file, so its manifest points
+# at a separate file with the literal managed-cloud URL.
+managed_cloud_url = "https://paperwork.bot/mcp"
+claude_mcp_url = "${PAPERWORK_MCP_URL:-#{managed_cloud_url}}"
 claude_server = mcp.dig("mcpServers", "paperwork") || {}
-unless claude_server["url"] == "https://paperwork.bot/mcp"
-  errors << "managed-cloud MCP URL must use the Paperwork HTTPS endpoint"
+unless claude_server["type"] == "http" && claude_server["url"] == claude_mcp_url
+  errors << "Claude Code MCP URL must be #{claude_mcp_url}"
 end
-unless claude_server["oauth_resource"] == "https://paperwork.bot/mcp"
-  errors << "managed-cloud MCP server must declare its OAuth resource"
+unless claude_server["oauth_resource"] == claude_server["url"]
+  errors << "Claude Code MCP server must declare an OAuth resource equal to its URL"
 end
 if claude_server.key?("headers")
   errors << "managed-cloud MCP server must not require a bearer-token environment variable"
+end
+
+unless codex_manifest["mcpServers"] == "./.codex-mcp.json"
+  errors << "Codex manifest must declare mcpServers ./.codex-mcp.json"
+end
+codex_server = codex_mcp.dig("mcpServers", "paperwork") || {}
+unless codex_server["type"] == "http" && codex_server["url"] == managed_cloud_url
+  errors << "Codex MCP URL must be the literal managed-cloud endpoint"
+end
+unless codex_server["oauth_resource"] == managed_cloud_url
+  errors << "Codex MCP server must declare its OAuth resource"
+end
+if codex_server.key?("headers") || codex_server.key?("bearer_token_env_var")
+  errors << "Codex managed-cloud MCP server must not require a bearer-token environment variable"
 end
 
 opencode_v1_server = opencode_v1.dig("mcp", "paperwork") || {}
@@ -186,7 +209,15 @@ capabilities.each do |name, entry|
   mapped_skills = Array(entry["skills"])
   errors << "#{name} has no owning skill" if mapped_skills.empty?
   mapped_skills.each do |skill_name|
-    errors << "#{name} references missing skill #{skill_name}" unless skill_names.include?(skill_name)
+    unless skill_names.include?(skill_name)
+      errors << "#{name} references missing skill #{skill_name}"
+      next
+    end
+
+    # A mapping is a promise that the skill teaches the tool. A skill that
+    # never names it cannot teach it.
+    skill_text = SKILLS.join(skill_name).glob("**/*.md").map(&:read).join("\n")
+    errors << "#{name} maps to #{skill_name}, which never mentions #{wire_name}" unless skill_text.include?(wire_name.to_s)
   end
 end
 errors << "capability MCP wire names are not unique" unless wire_names.uniq.length == wire_names.length

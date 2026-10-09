@@ -5,8 +5,9 @@ description: Discover a Paperwork account's authorized vocabulary over MCP. Use 
 
 # Paperwork Account Guide
 
-Call `account_describe` once before work that depends on account-specific keys.
-Do not guess keys from display labels or examples.
+Call `account_describe` once per session, before work that depends on
+account-specific keys, and keep the result. Do not guess keys from display
+labels or examples.
 
 ## Procedure
 
@@ -16,10 +17,16 @@ Do not guess keys from display labels or examples.
    - workflow, task, and document states;
    - document and workflow resolutions;
    - account roles and task queues;
-   - visible agents, their keys, and their contact roles; and
+   - visible agents, their keys, and their contact roles (`agents_list` adds
+     each agent's status, attached SOPs, and whether the user can edit it);
+   - active account members in `users`, with their roles (the people a task
+     can be handed to);
    - supported download variants;
-   - token-filtered `capabilities` entries (`name`, `read_only`,
-     `requires_workflow`, `description`); and
+   - the connection's `capabilities`: each entry has `name` (the MCP tool
+     name), `read_only`, `requires_workflow`, and `tier` (`read`, `work`, or
+     `setup`). Descriptions are left out because the tool list already carries
+     them; pass `include_capability_descriptions: true` only when you need
+     them; and
    - `operating_contract`, including client-owned reasoning and server authority.
 3. Read the live tool schema before calling a capability. The bundled map
    routes work; it does not grant access or prove a deployment supports a tool.
@@ -52,8 +59,9 @@ and continue into the focused Paperwork skill without dumping the full catalog.
 ## Rules
 
 - Read-only. Never change account or agent configuration.
-- The result reflects the acting user's current authorization. Do not
-  speculate about hidden agents, roles, or types.
+- The result reflects the acting user's current authorization and the
+  connection's agent limit. Do not speculate about hidden agents, roles, or
+  types.
 - Refresh when a later tool rejects a previously valid key or the user says
   account configuration changed.
 

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "paperwork": {
+      "type": "http",
+      "url": "https://paperwork.bot/mcp",
+      "oauth_resource": "https://paperwork.bot/mcp"
+    }
+  }
+}

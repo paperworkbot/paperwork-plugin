@@ -30,7 +30,8 @@ approximate matches.
    - `paperworks_get` for each selected document dossier;
    - `processes_history` for why a workflow is held or unresolved; or
    - `paperworks_search` as a bounded fallback when an identifier may have been
-     extracted differently.
+     extracted differently; `question` with a shape such as `INV-####-##`
+     finds numbers of that form.
 
 ## Output
 

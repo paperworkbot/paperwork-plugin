@@ -11,15 +11,24 @@ Build a bounded relationship view from authorized workflows.
 
 1. Call `contacts_search` using the complete name, account number, or external
    id the user supplied. If candidates remain ambiguous, list them and ask;
-   never guess.
-2. Call `processes_search` with the selected `contact_reference` and
-   `state: "open"`.
-3. Search again without the state filter for recent completed and cancelled
-   history.
-4. For up to three active workflows, use `context_get`. Use
+   never guess. A task or workflow may already give you a `contact_reference`.
+2. Call `contacts_get` for the profile: identifiers, alternate names, and the
+   contact instructions. This review changes none of them; to edit the profile
+   or its instructions, use the `paperwork-agent-operations` skill.
+3. Call `processes_summary` with the `contact_reference` for exact counts by
+   state and age. Then call `processes_search` with the same
+   `contact_reference` and `state: "open"` for a bounded sample of open work.
+4. Call `tasks_list` with the `contact_reference` for tasks about this contact
+   or on its workflows. Add `state: "all"` with `resolution` to see how past
+   tasks ended.
+5. Search workflows again without the state filter for recent completed and
+   cancelled history.
+6. For up to three active workflows, use `context_get`. Use
    `processes_history` on the most relevant workflows when the user wants the
    story behind their state.
-5. Summarize counts and recent examples rather than enumerating a high-volume
+7. When the rules for this contact matter, call `learnings_list` with the
+   workflows' agent and this `contact_reference`.
+8. Summarize counts and recent examples rather than enumerating a high-volume
    relationship.
 
 ## Output

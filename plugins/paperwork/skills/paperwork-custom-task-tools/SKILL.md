@@ -7,8 +7,8 @@ description: Discover, invoke, and poll administrator-approved direct custom-tas
 
 Run only the direct custom-task tools that the authenticated MCP server
 advertises. These are account-defined operations and may call external
-systems. Read [Paperwork agent safety](../paperwork/references/safety.md)
-before invoking one.
+systems. Every invocation follows the one confirmation rule in
+[Paperwork agent safety](../paperwork/references/safety.md).
 
 ## Discover
 
@@ -42,8 +42,11 @@ effects require appropriate explicit scope.
    the task. For an account run, state that no workflow is involved.
 2. Gather only fields declared by the advertised schema.
 3. State the exact workflow (or "account context"), custom tool, and material
-   arguments. Use the user's existing bounded authorization for ordinary
-   in-scope calls; request new authority only for materially broader effects.
+   arguments. A direct custom task is a material write under the confirmation
+   rule in [safety.md](../paperwork/references/safety.md): the user's request
+   confirms it when it names the tool, target, and inputs, and one
+   confirmation covers the one stated set of calls (for example, the batches
+   of one statement). Ask again for materially broader effects.
 4. Invoke once. Do not retry a timeout or ambiguous response automatically,
    because the external effect may already have occurred. For an account run,
    send a stable `idempotency_key` (for example a local checksum plus a batch
@@ -104,7 +107,8 @@ Report:
 - `not_found`: the tool/run is unavailable to this token or does not exist.
   Do not distinguish by guessing.
 - `forbidden`: current role, task exposure, token grant, or workflow access no
-  longer permits the operation.
+  longer permits the operation. A connection limited to named agents refuses
+  custom tasks on other agents' workflows.
 - `invalid_request`: correct only schema-declared input errors; never loosen
   or bypass the schema.
 - `rate_limited`: pace read/poll retries using the returned error contract;

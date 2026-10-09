@@ -2,8 +2,8 @@
   "mcpServers": {
     "paperwork": {
       "type": "http",
-      "url": "https://paperwork.bot/mcp",
-      "oauth_resource": "https://paperwork.bot/mcp"
+      "url": "${PAPERWORK_MCP_URL:-https://paperwork.bot/mcp}",
+      "oauth_resource": "${PAPERWORK_MCP_URL:-https://paperwork.bot/mcp}"
     }
   }
 }

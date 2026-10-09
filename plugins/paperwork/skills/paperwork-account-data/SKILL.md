@@ -37,7 +37,9 @@ CLI, credential lookup, or database connection is needed.
    cursors, inconsistent `has_more`, changed scope/query/schema, and malformed
    responses. Save a continuation privately if the budget ends before traversal.
 6. Only report complete traversal when `next_cursor` is null, `has_more` is false,
-   and `coverage.complete` is true. `coverage.consistency: 'live'` means records
+   and `coverage.complete` is true. On a connection limited to named agents,
+   workflow, task, document, and agent rows cover only those agents; say so
+   when you report totals. `coverage.consistency: 'live'` means records
    can change between calls, including across relations. This is never a
    point-in-time snapshot or proof that every underlying account record is visible.
 

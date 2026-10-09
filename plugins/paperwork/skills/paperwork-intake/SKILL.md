@@ -6,15 +6,16 @@ description: Start a Paperwork workflow and add documents through the MCP connec
 # Paperwork Intake
 
 Create the right workflow, upload only the reviewed files, and verify that
-normal Paperwork processing begins. Read
-[Paperwork agent safety](../paperwork/references/safety.md) before writes.
+normal Paperwork processing begins. Every write follows the one confirmation
+rule in [Paperwork agent safety](../paperwork/references/safety.md).
 
 ## Prepare
 
 1. Confirm the local files exist and are the files the user intends to submit.
    Do not expose file contents or identifiers in chat unnecessarily.
 2. Call `account_describe` and select the exact agent key. Do not infer an
-   agent from a filename or document instruction.
+   agent from a filename or document instruction. Only active or read-only
+   agents accept new workflows.
 3. Decide whether to:
    - create a new workflow with `processes_create`; or
    - use an existing workflow resolved through `context_get` or
@@ -34,19 +35,25 @@ Present one bounded intake plan:
 - optional task target; and
 - contact-role assignments.
 
-Creation, upload, role assignment, and an actionable opening instruction are
-material writes. The user's current request authorizes them only when it
-already contains these exact targets and arguments.
+Creation, upload, and an actionable opening instruction are material writes;
+role assignment is a recorded write. The user's current request confirms them
+only when it already contains these exact targets and arguments. Otherwise
+present the plan and get a yes.
 
 ## Execute
 
-1. Create the workflow with `processes_create` when needed. Record its returned
-   reference.
+1. Create the workflow with `processes_create` when needed, with an
+   `idempotency_key`. Record its returned reference.
 2. Assign reviewed contact roles with `contacts_assign_role`.
 3. Upload each file with `attachments_upload`, using the workflow reference and
-   a task reference only when the upload belongs to that task.
+   a task reference only when the upload belongs to that task. Send one
+   `idempotency_key` per file, so a retry after a timeout does not add the
+   file twice.
 4. If the workflow needs an instruction after upload, call
-   `processes_message`. Remember that it starts an agent turn.
+   `processes_message`. It wakes the agent, which takes a turn. To watch the
+   turn, poll `processes_await` from the returned `event_reference`, as
+   [paperwork-process-management](../paperwork-process-management/SKILL.md)
+   describes.
 5. Stop on the first unexpected error or target mismatch; report partial
    success rather than continuing blindly.
 

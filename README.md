@@ -60,13 +60,20 @@ or [`opencode-v2.example.jsonc`](opencode-v2.example.jsonc) for OpenCode v2,
 whose server entries live under `mcp.servers`. OpenCode reads the token from
 the process environment; never paste it into the configuration file.
 
+## Self-hosted Paperwork
+
+Claude Code reads the server URL from `PAPERWORK_MCP_URL` and falls back to
+`https://paperwork.bot/mcp`. Set it to your deployment's `/mcp` URL in the
+environment that starts Claude Code, then authenticate in the browser as
+usual. Codex users register a self-hosted server with `codex mcp add`; see the
+`paperwork-setup` skill.
+
 ## Manual connections
 
-OpenCode, headless automation, and self-hosted hosts that differ from
-`https://paperwork.bot` still use a manual `pwcap_` token from
+OpenCode and headless automation use a manual `pwcap_` token from
 **Setup -> API & MCP Access**. Keep it in an OS credential manager or process
 environment, never in chat or a repository. Use a dedicated non-admin user for
-unattended automation.
+unattended automation, and limit the token to the agents it serves.
 
 ## What is included
 
@@ -77,21 +84,22 @@ unattended automation.
 | `paperwork-account-guide` | Discovers account vocabulary and allowed values |
 | `paperwork-account-data` | Queries account datasets and assembles verified private JSONL exports for local analysis |
 | `paperwork-check-in` | Produces read-only daily status, priorities, blockers, and next steps |
-| `paperwork-triage` | Prepares and applies guarded recommendation plans for filtered task cohorts |
-| `paperwork-task-work` | Investigates and operates one task end to end |
-| `paperwork-process-management` | Searches, creates, annotates, messages, and changes workflows |
+| `paperwork-triage` | Queues hosted triage runs and applies their reviewed recommendation plans |
+| `paperwork-task-work` | Investigates and operates one task end to end, or one confirmed action across many tasks |
+| `paperwork-process-management` | Searches, creates, annotates, messages, assigns, and changes workflows, including bulk changes and board moves |
 | `paperwork-document-management` | Searches, inspects, reads, downloads, resolves, and reprocesses paperwork |
 | `paperwork-intake` | Creates a workflow, assigns contacts, uploads files, and verifies processing |
 | `paperwork-processing` | Follows an upload through processing, extraction, result inspection, and timeline review |
 | `paperwork-contact-history` | Reviews one counterparty relationship |
 | `paperwork-document-lookup` | Reconciles one or many document identifiers |
+| `paperwork-statement-reconciliation` | Reconciles a local statement file against Paperwork and the system of record without uploading it |
 | `paperwork-custom-task-tools` | Discovers, invokes, and polls administrator-approved account-specific tools |
-| `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, and SOPs with version checks |
+| `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, SOPs, assignments, and reviewed learnings with version checks |
 
-The source package is version **0.11.0**. Its skills cover the fixed capability
+The source package is version **0.14.1**. Its skills cover the fixed capability
 catalog plus opt-in direct custom-task tools through live discovery.
-It does not administer accounts, users, agents, custom-task definitions,
-integrations, secrets, or arbitrary code.
+It does not create agents or change their model, runtime, tool, integration,
+secret, or arbitrary-code configuration.
 
 See [`plugins/paperwork/README.md`](plugins/paperwork/README.md) for capability
 profiles, safety boundaries, updates, and removal.

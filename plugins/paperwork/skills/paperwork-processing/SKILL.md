@@ -52,8 +52,9 @@ When `ready_for_read` is true:
    `paperworks_read` only for one bounded question not answered by structured
    data.
 5. Call `processes_history` to explain the sequence of upload, processing,
-   extraction, agent actions, and task changes. Page newest-first and keep the
-   request bounded.
+   extraction, agent actions, and task changes. It pages newest-first; pass
+   `next_before_event_reference` as `before_event_reference` for older events,
+   and keep the request bounded.
 
 ## Continue The Workflow
 

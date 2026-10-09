@@ -96,7 +96,7 @@ unattended automation, and limit the token to the agents it serves.
 | `paperwork-custom-task-tools` | Discovers, invokes, and polls administrator-approved account-specific tools |
 | `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, SOPs, assignments, and reviewed learnings with version checks |
 
-The source package is version **0.14.1**. Its skills cover the fixed capability
+The source package is version **0.14.2**. Its skills cover the fixed capability
 catalog plus opt-in direct custom-task tools through live discovery.
 It does not create agents or change their model, runtime, tool, integration,
 secret, or arbitrary-code configuration.

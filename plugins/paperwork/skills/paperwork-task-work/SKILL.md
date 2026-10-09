@@ -163,7 +163,9 @@ of tasks the same way:
 2. Get an explicit confirmation for that list. It covers only that list.
 3. Call `tasks_bulk` once (up to 100 tasks) with an `idempotency_key`.
 4. Report each task's result, including every failure and its reason. Do not
-   resend failed items without a new confirmation.
+   resend failed items without a new confirmation. If the result has
+   `deferred_references`, the call stopped early: call again with exactly those
+   references and a new `idempotency_key`.
 
 To close a group of tasks without completing them (for example a stale
 backlog), there is no cancel tool. Call `tasks_get` and use the task's own

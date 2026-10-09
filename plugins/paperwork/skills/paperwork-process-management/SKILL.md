@@ -154,7 +154,8 @@ and close the ones that finish":
 4. call `processes_bulk_update` once (up to 100 workflows) with an
    `idempotency_key`. A `message` wakes every listed agent. Each workflow
    runs its own guard, so read each result and report every failure with its
-   reason;
+   reason. If the result has `deferred_references`, the call stopped early:
+   call again with exactly those references and a new `idempotency_key`;
 5. use single-workflow tools for anything the bulk tool does not cover, each
    under the confirmation rule; and
 6. stop if one target differs materially from the confirmed list. A new list

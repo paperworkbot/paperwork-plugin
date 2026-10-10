@@ -1,5 +1,5 @@
 version: 1
-plugin_version: "0.14.2"
+plugin_version: "0.15.0"
 dynamic_tools:
   direct_custom_tasks:
     mcp_pattern: "custom_task_*"
@@ -351,6 +351,21 @@ capabilities:
     mode: read
     scope: account
     skills: [paperwork-check-in, paperwork-triage, paperwork-contact-history]
+  paperworks.summary:
+    mcp: paperworks_summary
+    mode: read
+    scope: account
+    skills: [paperwork-check-in, paperwork-triage]
+  paperworks.present:
+    mcp: paperworks_present
+    mode: read
+    scope: account
+    skills: [paperwork-check-in, paperwork-triage]
+  tasks.present:
+    mcp: tasks_present
+    mode: read
+    scope: account
+    skills: [paperwork-check-in, paperwork-triage]
   tasks.summary:
     mcp: tasks_summary
     mode: read

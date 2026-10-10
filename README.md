@@ -96,10 +96,18 @@ unattended automation, and limit the token to the agents it serves.
 | `paperwork-custom-task-tools` | Discovers, invokes, and polls administrator-approved account-specific tools |
 | `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, SOPs, assignments, and reviewed learnings with version checks |
 
-The source package is version **0.14.2**. Its skills cover the fixed capability
+The source package is version **0.15.0**. Its skills cover the fixed capability
 catalog plus opt-in direct custom-task tools through live discovery.
 It does not create agents or change their model, runtime, tool, integration,
 secret, or arbitrary-code configuration.
+
+Version 0.15.0 adds guidance for task review tiles, document previews without
+an associated task, and exact intake summaries. Review tiles can include
+verification signals and bounded precedent examples when the connection has
+the required grants. Use a compatible Paperwork deployment with these MCP
+capabilities enabled, update an existing plugin install, and reauthorize the
+MCP connection if the new tools are missing. Existing permission and write
+confirmation rules still apply.
 
 See [`plugins/paperwork/README.md`](plugins/paperwork/README.md) for capability
 profiles, safety boundaries, updates, and removal.

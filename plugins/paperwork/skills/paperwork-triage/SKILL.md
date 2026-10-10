@@ -37,9 +37,25 @@ follows the confirmation rule in
 5. Use `tasks_list` with `sort: "oldest"` for a bounded sample of the cohort.
    Follow `next_cursor` only while the sample is too small; do not enumerate a
    large queue merely to count it.
-6. Call `tasks_get` only for the few highest-priority or ambiguous tasks whose
+6. Call `tasks_present` with the `task_references` of the cohort you want to
+   review (at most 25) to see each task's key facts, open actions, and the
+   first pages of its paperwork, in one call. Use `pages_per_paperwork` up to 3
+   for the pages that matter, and `paperworks_pages` with `include_images` for
+   a page at full size. Read each document's `signals` (delivery blocker,
+   verification flags, possible duplicates) before you recommend an action, and
+   pass `include_precedents: true` for at most 10 tasks to see how similar tasks
+   ended. Group what you see into lanes. Tiles are a sample of at
+   most 25 tasks: report repeats you see in them as a sample, and call
+   something a pattern only after `tasks_summary` breakdowns (agent, task type,
+   assignee) confirm it across the whole cohort. For a surge in what is
+   arriving, call `paperworks_summary` and quote its `flag_rule`; do not
+   invent a threshold.
+   Use `paperworks_present` with exact `paperwork_references` when the documents
+   you need to inspect have no task. It shows their first pages under the same
+   read permissions; it does not create a task or apply a recommendation.
+7. Call `tasks_get` only for the few highest-priority or ambiguous tasks whose
    detail changes the recommendation.
-7. Call `boards_list` when the user asks how work is laid out, or which column
+8. Call `boards_list` when the user asks how work is laid out, or which column
    or board something is sitting in.
 
 ## Create And Review A Run

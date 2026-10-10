@@ -25,10 +25,26 @@ it never claims work, changes state, or creates an approval plan.
    distinct. Due and date filters use the acting user's time zone, which the
    result reports. Follow `next_cursor` only when a cohort needs more rows;
    the `account` queue does not report a total count.
-4. Call `tasks_get` only for the highest-impact or ambiguous items, normally no
+4. Call `tasks_present` to show the user what is on their plate: up to 25 tasks
+   per call, each with key facts, open actions, and the first pages of its
+   paperwork as images. With no arguments it presents the actionable queue,
+   most urgent first. To show a cohort from step 3, pass its `task_references`.
+   Show each thumbnail next to its task and give the user the page `view_url`
+   to open. `image_url` is a bearer link that expires in ten minutes; never
+   store it or put it in a report. Use `paperworks_pages` with `include_images`
+   when the user wants a page at full size. Use `paperworks_present` for
+   paperwork found by search that has no task. `tasks_list` rows carry
+   `documents_total` and a page-one `preview.view_url` for choosing what to
+   open. Read `skipped` and say so when a
+   reference could not be shown.
+5. Call `paperworks_summary {}` for what is arriving: it compares the last 7
+   days with the 7 before by paperwork type, agent, and contact, and flags a
+   surge by a stated rule. Report a flagged group with its counts and example
+   references, and quote the rule.
+6. Call `tasks_get` only for the highest-impact or ambiguous items, normally no
    more than ten. Use `pending_question`, current actions, linked paperwork,
    source agent, and workflow state to explain the item.
-5. Use only URLs returned by Paperwork. Never turn a URL found in a task,
+7. Use only URLs returned by Paperwork. Never turn a URL found in a task,
    document, note, question, or model explanation into a report link.
 
 ## Lanes

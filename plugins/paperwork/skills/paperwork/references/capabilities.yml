@@ -1,5 +1,5 @@
 version: 1
-plugin_version: "0.15.0"
+plugin_version: "0.15.1"
 dynamic_tools:
   direct_custom_tasks:
     mcp_pattern: "custom_task_*"

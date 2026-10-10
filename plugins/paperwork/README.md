@@ -1,7 +1,7 @@
 # PaperworkBot
 
-PaperworkBot is Kaytos, LLC's cross-client operating layer for the Claude app,
-Claude Code, Codex, and OpenCode. The Claude app uses the remote Paperwork
+Operate Paperwork from the Claude app, Claude Code, Codex, or OpenCode.
+The Claude app uses the remote Paperwork
 connector directly. One canonical Agent Skills tree teaches coding clients how
 to discover account vocabulary, triage queues, investigate evidence, and use
 the Paperwork MCP server without broadening the user's request.

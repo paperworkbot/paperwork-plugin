@@ -1,8 +1,7 @@
 # PaperworkBot
 
-PaperworkBot, from Kaytos, LLC, lets you operate
-[Paperwork](https://paperwork.bot) from the Claude app, Claude Code, Codex, or
-OpenCode. The remote connector gives Claude app users the Paperwork tools
+Operate [Paperwork](https://paperwork.bot) from the Claude app, Claude Code,
+Codex, or OpenCode. The remote connector gives Claude app users the Paperwork tools
 directly; the plugin adds safe procedures for account discovery, queue triage,
 tasks, workflows, contacts, document intake, processing follow-through,
 document investigation, and paperwork resolution.
@@ -96,7 +95,7 @@ unattended automation, and limit the token to the agents it serves.
 | `paperwork-custom-task-tools` | Discovers, invokes, and polls administrator-approved account-specific tools |
 | `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, SOPs, assignments, and reviewed learnings with version checks |
 
-The source package is version **0.15.0**. Its skills cover the fixed capability
+The source package is version **0.15.1**. Its skills cover the fixed capability
 catalog plus opt-in direct custom-task tools through live discovery.
 It does not create agents or change their model, runtime, tool, integration,
 secret, or arbitrary-code configuration.

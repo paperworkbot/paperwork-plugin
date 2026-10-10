@@ -1,7 +1,7 @@
 {
   "name": "paperwork",
-  "version": "0.15.0",
-  "description": "PaperworkBot operates your Paperwork account from a local agent: triage queues, manage tasks and workflows, intake files through processing and extraction, investigate contacts and documents, run approved custom tools, and resolve paperwork through a permission-scoped MCP connection.",
+  "version": "0.15.1",
+  "description": "Operate your Paperwork account from a local agent: triage queues, manage tasks and workflows, intake files through processing and extraction, investigate contacts and documents, run approved custom tools, and resolve paperwork through a permission-scoped MCP connection.",
   "author": {
     "name": "Kaytos, LLC",
     "url": "https://paperwork.bot"
@@ -23,7 +23,7 @@
   "interface": {
     "displayName": "PaperworkBot",
     "shortDescription": "Operate your Paperwork account safely",
-    "longDescription": "PaperworkBot connects your local agent to Paperwork so it can discover account vocabulary, triage queues, investigate and act on tasks, manage workflows, review contacts, intake files, follow processing through extracted results, query and download documents, invoke administrator-approved custom tools, and resolve paperwork. Sign in through Paperwork when Codex asks; every call runs within your current Paperwork permissions.",
+    "longDescription": "Operate Paperwork from your local agent: discover account vocabulary, triage queues, investigate and act on tasks, manage workflows, review contacts, intake files, follow processing through extracted results, query and download documents, invoke administrator-approved custom tools, and resolve paperwork. Sign in through Paperwork when Codex asks; every call runs within your current Paperwork permissions.",
     "developerName": "Kaytos, LLC",
     "category": "Productivity",
     "capabilities": [

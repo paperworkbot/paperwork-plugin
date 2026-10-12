@@ -30,9 +30,16 @@ confirmation rule in [Paperwork agent safety](../paperwork/references/safety.md)
    stalled, completed, or cancelled, and before any material write. Page older
    events with `before_event_reference` set to the previous
    `next_before_event_reference`.
-4. For contact-centered work, resolve with `contacts_search` or
+4. To filter on what an agent extracts (an amount, a type, a code, a date),
+   call `fields_list` for that agent, then pass `plan` to `processes_search`
+   or `processes_summary` using the `plan_field` names, or pass `question` in
+   plain words. Use `options` values verbatim. Read `filter_plan` in the
+   result before you report: it is the filter that actually ran. A rejected
+   plan returns the reason; fix that part and retry. See
+   [filter plans](references/filter-plans.md).
+5. For contact-centered work, resolve with `contacts_search` or
    `contacts_lookup`, then filter `processes_search` by `contact_reference`.
-5. Use `processes_summary` when the complete cohort count and age, state,
+6. Use `processes_summary` when the complete cohort count and age, state,
    assignee, or agent breakdown matters. Use `processes_search` for a bounded
    sample. Its rows are compact; ask for `detail: "full"` only with a small
    `limit`. Follow `next_cursor` only while you need more rows.

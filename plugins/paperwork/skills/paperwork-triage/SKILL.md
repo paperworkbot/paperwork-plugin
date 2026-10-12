@@ -34,6 +34,10 @@ follows the confirmation rule in
    `tasks_summary {"state": "on_hold"}` for parked work.
 4. Use the same explicit filters for age (`created_before`), due date, agent,
    role, user, contact, resolution, task type, workflow state, or a text query.
+   For anything the workflow's agent extracted (an amount, a counterparty, a code),
+   call `fields_list`, then pass `plan` (or `question`) to `tasks_summary` and
+   `tasks_list`, with workflow and document conditions inside a `workflow`
+   node. See [filter plans](../paperwork-process-management/references/filter-plans.md).
 5. Use `tasks_list` with `sort: "oldest"` for a bounded sample of the cohort.
    Follow `next_cursor` only while the sample is too small; do not enumerate a
    large queue merely to count it.

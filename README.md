@@ -95,10 +95,18 @@ unattended automation, and limit the token to the agents it serves.
 | `paperwork-custom-task-tools` | Discovers, invokes, and polls administrator-approved account-specific tools |
 | `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, SOPs, assignments, and reviewed learnings with version checks |
 
-The source package is version **0.15.1**. Its skills cover the fixed capability
+The source package is version **0.16.0**. Its skills cover the fixed capability
 catalog plus opt-in direct custom-task tools through live discovery.
 It does not create agents or change their model, runtime, tool, integration,
 secret, or arbitrary-code configuration.
+
+Version 0.16.0 adds guidance for filtering workflows and tasks on the fields
+that agents extract. The skills call `fields.list` to find those fields, then
+apply a filter plan or a plain-language question. Summary reports group and
+summarize the matching records. Use a compatible Paperwork deployment with the
+`fields.list` MCP capability enabled, update an existing plugin install, and
+reauthorize the MCP connection if `fields.list` is missing. Existing permission
+and write confirmation rules still apply.
 
 Version 0.15.0 adds guidance for task review tiles, document previews without
 an associated task, and exact intake summaries. Review tiles can include

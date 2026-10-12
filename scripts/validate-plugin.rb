@@ -168,10 +168,10 @@ rescue Psych::Exception => error
 end
 
 capabilities = capability_map.fetch("capabilities", {})
-# The exact capability set is asserted against the live registry by
-# spec/plugin/paperwork_plugin_spec.rb. This script runs standalone in the
-# distribution repository, where the registry is unavailable, so it checks
-# internal consistency instead of a hardcoded count that silently drifts.
+# The server's test suite checks the exact capability set against its live
+# registry. This script runs standalone in the distribution repository, where
+# that registry is unavailable, so it checks internal consistency instead of a
+# hardcoded count that silently drifts.
 errors << "no capabilities mapped" if capabilities.empty?
 capabilities.each do |capability_name, mapping|
   Array(mapping && mapping["skills"]).each do |skill_name|

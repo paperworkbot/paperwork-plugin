@@ -54,7 +54,7 @@ Collaborate.
 Account discovery, check-ins, relationship review, document lookup, workflow
 history, upload progress, bounded document reading, and downloads:
 
-`account.describe`, `account.snapshot`, `context.get`, `records.lookup`,
+`account.describe`, `account.snapshot`, `fields.list`, `context.get`, `records.lookup`,
 `tasks.summary`, `tasks.list`, `tasks.get`, `tasks.precedents`,
 `triage_runs.get`, `contacts.search`, `contacts.lookup`, `contacts.get`,
 `processes.search`, `processes.summary`, `processes.history`,

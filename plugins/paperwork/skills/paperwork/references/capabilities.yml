@@ -1,5 +1,5 @@
 version: 1
-plugin_version: "0.15.1"
+plugin_version: "0.16.0"
 dynamic_tools:
   direct_custom_tasks:
     mcp_pattern: "custom_task_*"
@@ -296,6 +296,11 @@ capabilities:
     mode: write
     scope: workflow
     skills: [paperwork-document-management]
+  fields.list:
+    mcp: fields_list
+    mode: read
+    scope: account
+    skills: [paperwork-process-management, paperwork-triage]
   paperworks.search:
     mcp: paperworks_search
     mode: read

@@ -18,7 +18,9 @@ it never claims work, changes state, or creates an approval plan.
 2. Call `tasks_summary {}` and `tasks_summary {"queue":"role_queue"}` for
    backlog age and agent, assignee, and task-type concentration. Role entries
    carry the role `key`; user entries carry the user `id`. Add
-   `processes_summary` when workflow-level state matters.
+   `processes_summary` when workflow-level state matters, and `tasks_report`
+   or `processes_report` with a day dimension when the report should say how
+   new work or completions moved day by day.
 3. Use bounded `tasks_list` calls for the cohorts that can change the report:
    overdue or due soon, pending questions, active errors, old role work, and
    old tasks whose workflows are on hold. Keep task state and workflow state

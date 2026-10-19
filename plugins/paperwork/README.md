@@ -100,7 +100,9 @@ agent shows the user the full new text first:
 
 `agents.update_instructions`, `sops.create`, `sops.update`, `sops.attach`,
 `sops.detach`, `sops.archive`, `learnings.create`, `learnings.update`,
-`learnings.review`, and `learnings.promote_to_sop`.
+`learnings.review`, and `learnings.review_sop_change` (accepting a suggested
+SOP change writes a new version of the agent's instructions, so the agent
+shows every edit as a diff first).
 
 ### Account data analysis and export
 

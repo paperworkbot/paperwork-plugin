@@ -95,10 +95,18 @@ unattended automation, and limit the token to the agents it serves.
 | `paperwork-custom-task-tools` | Discovers, invokes, and polls administrator-approved account-specific tools |
 | `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, SOPs, assignments, and reviewed learnings with version checks |
 
-The source package is version **0.16.0**. Its skills cover the fixed capability
+The source package is version **0.16.1**. Its skills cover the fixed capability
 catalog plus opt-in direct custom-task tools through live discovery.
 It does not create agents or change their model, runtime, tool, integration,
 secret, or arbitrary-code configuration.
+
+Version 0.16.1 updates the triage skill for grouped reviews: how look-alike
+tasks are grouped, Map to contact, and the `group_actions` choices that
+`triage_runs_prepare_apply` accepts. Without a choice, a task that still asks
+who its contact is refuses the default button. It needs a deployment at
+v0.27.0 or later (the document-matched supplier rule it describes needs
+v0.28.0). No new capability is needed; update an existing plugin
+install.
 
 Version 0.16.0 adds guidance for filtering workflows and tasks on the fields
 that agents extract. The skills call `fields.list` to find those fields, then

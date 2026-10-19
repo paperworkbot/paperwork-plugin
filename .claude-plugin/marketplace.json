@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "paperwork",
-      "version": "0.16.0",
+      "version": "0.16.1",
       "source": "./plugins/paperwork",
       "description": "Operate your Paperwork account from a local agent over MCP.",
       "category": "productivity"

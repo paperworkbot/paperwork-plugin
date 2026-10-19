@@ -14,7 +14,9 @@ Build a bounded relationship view from authorized workflows.
    never guess. A task or workflow may already give you a `contact_reference`.
 2. Call `contacts_get` for the profile: identifiers, alternate names, and the
    contact instructions. This review changes none of them; to edit the profile
-   or its instructions, use the `paperwork-agent-operations` skill.
+   or its instructions, use the `paperwork-agent-operations` skill. For the
+   account's contact data as a whole (how many have an External ID, which
+   custom fields are in use), call `contacts_summary`.
 3. Call `processes_summary` with the `contact_reference` for exact counts by
    state and age. Then call `processes_search` with the same
    `contact_reference` and `state: "open"` for a bounded sample of open work.

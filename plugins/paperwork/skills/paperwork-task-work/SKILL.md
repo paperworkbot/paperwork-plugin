@@ -175,9 +175,9 @@ task, so group tasks that offer the identical action. Closing a delegated
 agent's review task can wake that agent, so test one task, read
 `processes_history`, and report what happened before you send the batch.
 
-`tasks_summary` has no account-wide queue and `tasks_list` with
-`queue: account` returns no total. To size an account-wide cohort, page
-`tasks_list` with its `cursor` and say that the count is from paging.
+To size an account-wide cohort, call `tasks_summary {"queue": "account"}` (it
+needs account-wide access and counts exactly the tasks you may read).
+`tasks_list` with `queue: account` returns no total; page it with its `cursor`.
 
 Do not use `tasks_bulk` to apply a triage plan that needs the Paperwork review
 screen. See [safety.md](../paperwork/references/safety.md).

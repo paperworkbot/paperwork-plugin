@@ -1,5 +1,5 @@
 version: 1
-plugin_version: "0.16.0"
+plugin_version: "0.16.1"
 dynamic_tools:
   direct_custom_tasks:
     mcp_pattern: "custom_task_*"
@@ -34,6 +34,46 @@ capabilities:
   task_kinds.archive:
     mcp: task_kinds_archive
     mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  task_kinds.dismiss_suggestion:
+    mcp: task_kinds_dismiss_suggestion
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  task_kinds.classify:
+    mcp: task_kinds_classify
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  tasks.report:
+    mcp: tasks_report
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations, paperwork-check-in, paperwork-triage]
+  processes.report:
+    mcp: processes_report
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations, paperwork-check-in, paperwork-process-management]
+  contacts.summary:
+    mcp: contacts_summary
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations, paperwork-contact-history]
+  account.settings:
+    mcp: account_settings
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations, paperwork-account-guide]
+  instructions.search:
+    mcp: instructions_search
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations]
+  instructions.history:
+    mcp: instructions_history
+    mode: read
     scope: account
     skills: [paperwork-agent-operations]
   data.describe:
@@ -166,8 +206,8 @@ capabilities:
     mode: write
     scope: account
     skills: [paperwork-agent-operations]
-  learnings.promote_to_sop:
-    mcp: learnings_promote_to_sop
+  learnings.review_sop_change:
+    mcp: learnings_review_sop_change
     mode: write
     scope: account
     skills: [paperwork-agent-operations]

@@ -70,7 +70,7 @@ Every Paperwork write belongs to one tier.
 | `contacts_assign_role` | Maps a contact to a workflow role only |
 | `learnings_suggest` | Stays inactive until an agent editor reviews it |
 | `triage_runs_create` | Queues hosted analysis; changes no task. Use it only when the user asks for a hosted triage run |
-| `triage_runs_prepare_apply` | Pins a plan; applies nothing |
+| `triage_runs_prepare_apply` | Pins a plan; changes no task. With `group_actions` it also saves the person's group choice on the review, only when the selection passes every check (a refused call saves nothing). Pass one only when the user stated that exact choice |
 
 ### Material, terminal, or outward-facing: confirm exact targets and effect
 
@@ -108,11 +108,12 @@ confirmation.
 
 `agents_update_instructions`, `sops_create`, `sops_update`, `sops_attach`,
 `sops_detach`, `sops_archive`, `learnings_create`, `learnings_update`,
-`learnings_review`, and `learnings_promote_to_sop` change what hosted agents
+`learnings_review`, and `learnings_review_sop_change` change what hosted agents
 are told on later runs. They are available whenever the user's roles allow the
 same edit in the Paperwork UI and the connection was not narrowed to a smaller
-access level. Show the user the complete new text or the exact assignment,
-then get an explicit confirmation. Contact instructions
+access level. Show the user the complete new text or the exact assignment
+(for a suggested SOP change, every edit as a diff), then get an explicit
+confirmation. Contact instructions
 (`custom_instructions` on `contacts_create` or `contacts_update`) follow the
 same rule: show the exact text before the write.
 

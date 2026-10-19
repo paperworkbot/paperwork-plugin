@@ -40,7 +40,9 @@ confirmation rule in [Paperwork agent safety](../paperwork/references/safety.md)
 5. For contact-centered work, resolve with `contacts_search` or
    `contacts_lookup`, then filter `processes_search` by `contact_reference`.
 6. Use `processes_summary` when the complete cohort count and age, state,
-   assignee, or agent breakdown matters. Use `processes_search` for a bounded
+   assignee, or agent breakdown matters. Use `processes_report` for counts
+   grouped by agent, state, or day (created, resolved, failed), such as
+   completions per day for one agent. Use `processes_search` for a bounded
    sample. Its rows are compact; ask for `detail: "full"` only with a small
    `limit`. Follow `next_cursor` only while you need more rows.
 
@@ -84,8 +86,10 @@ confirmation rule in [Paperwork agent safety](../paperwork/references/safety.md)
   current workflow. Prefer contact scope for supplier-specific identifiers, layouts, mappings,
   or row conventions; use agent scope only when the rule truly applies to every workflow. State
   the exact proposed text and scope before writing. The acting user must be able to read the
-  source workflow. The result is inactive and requires an agent editor's review in Manage
-  Agents → Learnings; never tell the user it is already applied or deterministic.
+  source workflow. The result is inactive. A contact learning requires an agent editor's review
+  in Manage Agents → Learnings; an agent-scoped one is a note for the agent's SOP, which the
+  weekly review works into a suggested SOP change for an editor to accept. Never tell the user
+  it is already applied or deterministic.
 - **Follow-up work:** Paperwork has no tool that creates a task; the
   workflow's agent creates its tasks. To ask for follow-up work, confirm the
   exact text with the user, then send it with `processes_message`, which wakes

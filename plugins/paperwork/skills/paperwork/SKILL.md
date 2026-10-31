@@ -27,6 +27,7 @@ and target records, then route to the narrowest operational skill.
 | Wait for an upload, inspect extraction, and continue from its result | [paperwork-processing](../paperwork-processing/SKILL.md) |
 | Review one contact's relationship and open work | [paperwork-contact-history](../paperwork-contact-history/SKILL.md) |
 | Edit contacts, workflow details, agent instructions, or SOPs | [paperwork-agent-operations](../paperwork-agent-operations/SKILL.md) |
+| Review how the account ran and submit proposals for people to decide | [paperwork-account-review](../paperwork-account-review/SKILL.md) |
 | Check whether one or many business identifiers already exist | [paperwork-document-lookup](../paperwork-document-lookup/SKILL.md) |
 | Reconcile a local statement file without uploading it | [paperwork-statement-reconciliation](../paperwork-statement-reconciliation/SKILL.md) |
 | Run an administrator-approved account-specific direct tool | [paperwork-custom-task-tools](../paperwork-custom-task-tools/SKILL.md) |
@@ -56,6 +57,9 @@ and target records, then route to the narrowest operational skill.
 
 Read [references/safety.md](references/safety.md) before any Paperwork write.
 It holds the one confirmation rule for every skill.
+Read [references/presentation.md](references/presentation.md) before you
+show the user tasks, workflows, contacts, or documents. Lead with linked
+titles and names, not with references or "Task 1, Task 2".
 Read [references/capabilities.yml](references/capabilities.yml) when tool
 selection, capability requirements, or token scope is unclear.
 

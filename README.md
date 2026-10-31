@@ -71,8 +71,9 @@ usual. Codex users register a self-hosted server with `codex mcp add`; see the
 
 OpenCode and headless automation use a manual `pwcap_` token from
 **Setup -> API & MCP Access**. Keep it in an OS credential manager or process
-environment, never in chat or a repository. Use a dedicated non-admin user for
-unattended automation, and limit the token to the agents it serves.
+environment, never in chat or a repository. A token acts as the user who
+creates it, so for unattended automation sign in as a dedicated non-admin user,
+create the token there, and limit it to the agents it serves.
 
 ## What is included
 
@@ -94,11 +95,41 @@ unattended automation, and limit the token to the agents it serves.
 | `paperwork-statement-reconciliation` | Reconciles a local statement file against Paperwork and the system of record without uploading it |
 | `paperwork-custom-task-tools` | Discovers, invokes, and polls administrator-approved account-specific tools |
 | `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, SOPs, assignments, and reviewed learnings with version checks |
+| `paperwork-account-review` | Reviews how an account's agents worked from exact reports and submits proposals that wait for people (`reviews_submit`) |
 
-The source package is version **0.16.1**. Its skills cover the fixed capability
+The source package is version **0.18.0**. Its skills cover the fixed capability
 catalog plus opt-in direct custom-task tools through live discovery.
 It does not create agents or change their model, runtime, tool, integration,
 secret, or arbitrary-code configuration.
+
+Version 0.18.0 manages counterparty knowledge. `learnings_create` takes
+document types, a playbook step and evidence in one call, and `learnings_get`
+returns every field with the workflows it reached. `translations_list`,
+`translations_create` and `translations_review` manage how a counterparty
+writes a value and what we call it, and `contacts_update` can append to or
+replace part of a contact's instructions with `instructions_edit`.
+`contacts_set_attribute` and `contacts_review_attribute` set, confirm and reject
+a contact's typed business facts (payment terms, currency, PO rule and the
+like), and `contacts_get` lists them. An older deployment does not serve the
+translation or business-fact tools.
+
+Version 0.17.0 adds drafted answers. `tasks_suggest` saves a resolution for a
+person to approve (the button, the form values, the note, the reasons and the
+evidence) without acting, and `tasks_suggestions` lists the drafts waiting in a
+queue. The triage skill explains when to draft instead of asking a person to
+type an answer. It needs a deployment with ADR-014 (Paperwork bot drafts); an
+older deployment does not serve the two tools.
+
+Version 0.16.3 updates how the skills present records: a new shared reference
+(`presentation.md`) tells the agent to lead with a task's or workflow's title,
+name contacts and actions, and put the reference after the name instead of
+numbering results. The wording changes only; no tool payload changes and no new
+capability is needed. Update an existing plugin install to get it.
+
+Version 0.16.2 updates the agent-operations skill: `tasks.report` with
+`health: true` shows each task kind's last 30 days and open queue. It needs a
+deployment at v0.29.0 or later. No new capability is needed; update an existing
+plugin install.
 
 Version 0.16.1 updates the triage skill for grouped reviews: how look-alike
 tasks are grouped, Map to contact, and the `group_actions` choices that

@@ -12,6 +12,21 @@ CLI, credential lookup, or database connection is needed.
 
 ## Discover and query
 
+For an on-demand report or ZIP of original PDFs, discover `reports_create`,
+`reports_get` and `reports_cancel` on the same connection. They require explicit
+report grants, `data.export`, full-account administration and no workflow/agent
+connection limit. They do not grant these permissions themselves. Creation runs
+bounded hosted compute: 20 minutes, at most 1,000 PDFs and a 1 GiB bundle. Ask for
+the smallest useful period (UTC, exclusive end), with optional agent filtering.
+The default period applies to document received dates; `date_basis` can instead
+select workflow creation dates. Poll the returned report ID; a report that did
+not finish returns its `reason`, which says what to narrow or retry. Downloads are
+authenticated application paths, private to the requester and expire in 24 hours.
+Use those paths as returned; never construct a storage URL or return file bytes
+in tool text. Cancellation stops work and removes temporary downloads. Review
+the report's selection and calculations; format/checksum validation does not
+establish business correctness. This feature changes no business records.
+
 1. Inspect live tool availability. `data.describe` / `data_describe` discovers
    relations; `data.scan` / `data_scan` queries rows; `data.export` /
    `data_export` is a separately granted JSONL capability. Scan access does not

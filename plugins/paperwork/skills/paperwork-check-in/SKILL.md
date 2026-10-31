@@ -71,11 +71,13 @@ the task under Needs your decision or Blocked elsewhere.
 
 ## Report
 
-Lead with the account pulse and the change window. Show at most ten tasks. For
-each task include:
+Follow [presenting Paperwork results](../paperwork/references/presentation.md).
+Lead with the account pulse and the change window. Show at most ten tasks,
+grouped by lane. For each task include:
 
-- linked task title or reference;
-- linked workflow and source agent;
+- the task title linked to its `links.self`, and the contact's name;
+- the linked workflow title and the source agent's name, with references as
+  trailing detail;
 - lane, age, due date, and workflow state when relevant;
 - one sentence explaining why it is in the report;
 - exact next step and the person or system that owns it; and

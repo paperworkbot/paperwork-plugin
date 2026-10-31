@@ -1,5 +1,5 @@
 version: 1
-plugin_version: "0.16.1"
+plugin_version: "0.18.0"
 dynamic_tools:
   direct_custom_tasks:
     mcp_pattern: "custom_task_*"
@@ -41,6 +41,11 @@ capabilities:
     mode: write
     scope: account
     skills: [paperwork-agent-operations]
+  reviews.submit:
+    mcp: reviews_submit
+    mode: write
+    scope: account
+    skills: [paperwork-account-review]
   task_kinds.classify:
     mcp: task_kinds_classify
     mode: write
@@ -91,6 +96,21 @@ capabilities:
     mode: read
     scope: account
     skills: [paperwork-account-data]
+  reports.create:
+    mcp: reports_create
+    mode: write
+    scope: account
+    skills: [paperwork-account-data]
+  reports.get:
+    mcp: reports_get
+    mode: read
+    scope: account
+    skills: [paperwork-account-data]
+  reports.cancel:
+    mcp: reports_cancel
+    mode: write
+    scope: account
+    skills: [paperwork-account-data]
   processes.summary:
     mcp: processes_summary
     mode: read
@@ -113,6 +133,16 @@ capabilities:
     skills: [paperwork-agent-operations]
   contacts.update:
     mcp: contacts_update
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  contacts.set_attribute:
+    mcp: contacts_set_attribute
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  contacts.review_attribute:
+    mcp: contacts_review_attribute
     mode: write
     scope: account
     skills: [paperwork-agent-operations]
@@ -208,6 +238,21 @@ capabilities:
     skills: [paperwork-agent-operations]
   learnings.review_sop_change:
     mcp: learnings_review_sop_change
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  translations.list:
+    mcp: translations_list
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations, paperwork-contact-history]
+  translations.create:
+    mcp: translations_create
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  translations.review:
+    mcp: translations_review
     mode: write
     scope: account
     skills: [paperwork-agent-operations]
@@ -461,6 +506,16 @@ capabilities:
     mode: read
     scope: account
     skills: [paperwork-task-work]
+  tasks.suggest:
+    mcp: tasks_suggest
+    mode: write
+    scope: account
+    skills: [paperwork-triage, paperwork-task-work]
+  tasks.suggestions:
+    mcp: tasks_suggestions
+    mode: read
+    scope: account
+    skills: [paperwork-triage, paperwork-task-work]
   tasks.resolve_contact:
     mcp: tasks_resolve_contact
     mode: write

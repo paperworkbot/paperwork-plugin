@@ -21,6 +21,43 @@ For a daily, morning, standup, or "what needs attention" report, use
 follows the confirmation rule in
 [Paperwork agent safety](../paperwork/references/safety.md).
 
+## Draft Answers For People
+
+When the user asks you to work through tasks that wait for people, and to
+leave the decisions to them, draft each answer with `tasks_suggest` instead of
+responding. A draft submits nothing: the person sees it on the task, with the
+form filled in, and approves it there or in the Suggested answers queue. Their
+approval is their own answer.
+
+1. Read the task with `tasks_get`, its documents with `paperworks_get` and
+   `paperworks_pages` when the question is about what the page prints, the
+   workflow with `processes_history`, and `tasks_precedents` when available.
+   Read `suggestion` on `tasks_get` first: a new draft replaces it.
+2. Check the question before answering it. Is the value printed the way the
+   task says (a list price is not a unit price; a ship date is not an invoice
+   date; a subtotal may not be printed at all)? Did a person already answer
+   it, or does the contact's standing instruction settle it? Then set
+   `diagnosis` (`wrong_question`, `duplicate` or `obsolete`) and say why.
+3. When the documents settle it, send `recommendation: "resolve"` with the
+   exact `action` and `input_field_values` from `tasks_get`, a short
+   `resolution_notes` in the person's voice, and the `record_version` you
+   read. A review takes a decision for every item. Paperwork checks the form's
+   rules now and refuses a draft the form would refuse; correct it and send
+   it again.
+4. When it needs a person's knowledge (a business decision, another system, a
+   supplier's reply), send `recommendation: "needs_person"` and say exactly
+   what remains and what you already checked.
+5. Cite `evidence`: the document reference, the field path, and a quote copied
+   from the page. A quote the page's text does not print is marked for the
+   person, so quote exactly. In the `rationale`, point at values as
+   `INV-1234.line_items.0.unit_price`.
+6. Set `confidence: "high"` only when the page plainly prints everything the
+   answer rests on. Only high-confidence drafts get one-click Approve in the
+   queue; approvals and bank or payment details always open the task.
+7. Use `tasks_suggestions` to see what is already drafted. Report how many
+   tasks you drafted, how many need a person, and how many asked the wrong
+   question, with links.
+
 ## Size The Cohort
 
 1. Call `account_snapshot {}` for the fastest exact account check: actionable,
@@ -177,7 +214,10 @@ does not authorize it.
    re-preparing a broader plan or acting on the tasks with direct tools.
 
 When reporting a run, summarize its groups, include each returned
-task-specific explanation, and link to the review screen. Route an individual
+task-specific explanation, and link to the review screen. Name each group by
+its shared issue and each task by its title linked to `links.task`, with the
+contact's name; follow
+[presenting Paperwork results](../paperwork/references/presentation.md). Route an individual
 selection to [paperwork-task-work](../paperwork-task-work/SKILL.md), which owns
 claiming, investigating, and acting on one task.
 

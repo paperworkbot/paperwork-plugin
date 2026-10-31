@@ -59,7 +59,7 @@ history, upload progress, bounded document reading, and downloads:
 `triage_runs.get`, `contacts.search`, `contacts.lookup`, `contacts.get`,
 `processes.search`, `processes.summary`, `processes.history`,
 `processes.await`, `boards.list`, `agents.list`, `agents.get`, `sops.list`,
-`sops.get`, `learnings.list`, `learnings.get`, `paperworks.search`,
+`sops.get`, `learnings.list`, `learnings.get`, `translations.list`, `paperworks.search`,
 `paperworks.get`, `paperworks.find_by_identifier`, `paperworks.lookup`,
 `paperworks.query_rows`, `paperworks.read`, `paperworks.pages`,
 `paperworks.download`, `attachments.get`, `attachments.download`, and
@@ -102,7 +102,10 @@ agent shows the user the full new text first:
 `sops.detach`, `sops.archive`, `learnings.create`, `learnings.update`,
 `learnings.review`, and `learnings.review_sop_change` (accepting a suggested
 SOP change writes a new version of the agent's instructions, so the agent
-shows every edit as a diff first).
+shows every edit as a diff first), `translations.create` and
+`translations.review` (how matching reads a contact's values), and
+`contacts.set_attribute` and `contacts.review_attribute` (a contact's typed
+business facts, which reach every later prompt for that contact).
 
 ### Account data analysis and export
 

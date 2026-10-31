@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paperwork Account Review"
+  short_description: "Review how an account runs and submit proposals for people to decide"
+  default_prompt: "Use $paperwork-account-review to review how my Paperwork account ran over the last week and submit proposals for people to review."

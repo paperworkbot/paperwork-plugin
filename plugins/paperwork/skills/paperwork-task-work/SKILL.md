@@ -122,7 +122,7 @@ The write tier of each tool is in
    structured field instead.
 4. Present, and get confirmation for:
    - the evidence and any uncertainty;
-   - the exact task reference and current state;
+   - the task's linked title, its reference, and its current state;
    - the action `button_text` label, and what it does to the task;
    - the resolution notes; and
    - the input values.
@@ -203,6 +203,11 @@ until `settled` is true. `tasks_respond` does not return a cursor. Report:
   such as `complete$$approved` to the user.
 - Completing, rejecting, and cancelling task actions are terminal.
 - Do not respond when evidence is insufficient; leave a note or hold instead.
+- When the user wants the decision left to the task's own person, draft it
+  with `tasks_suggest` instead of `tasks_respond`: the person sees your answer
+  on the task, with the form filled in, and approves it. Read `suggestion` on
+  `tasks_get` first, and use `tasks_suggestions` to see drafts already waiting.
+  The [triage skill](../paperwork-triage/SKILL.md) describes a good draft.
 - A `blocked` refusal stops that write. Report the reason; do not reach the
   same result through another tool. Override it only as `safety.md` describes:
   the same call, once, with `workflow_guard_override_reason`, after the user

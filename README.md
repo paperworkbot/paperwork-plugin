@@ -97,10 +97,24 @@ create the token there, and limit it to the agents it serves.
 | `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, SOPs, assignments, and reviewed learnings with version checks |
 | `paperwork-account-review` | Reviews how an account's agents worked from exact reports and submits proposals that wait for people (`reviews_submit`) |
 
-The source package is version **0.18.0**. Its skills cover the fixed capability
+The source package is version **0.19.1**. Its skills cover the fixed capability
 catalog plus opt-in direct custom-task tools through live discovery.
 It does not create agents or change their model, runtime, tool, integration,
 secret, or arbitrary-code configuration.
+
+Version 0.19.1 adds a recipe for working a cohort end to end in the task-work
+skill: find tasks by kind with a filter plan, export their documents' fields for
+a CSV, download their files, and answer or close them in one confirmed batch.
+
+Version 0.19.0 frames open work as decisions. `decisions_list` groups the
+open tasks in the user's queue by agent, kind and reason across contacts, with
+counts and the usual earlier answer, and `triage_runs_create` takes
+`across_contacts` to review one decision's tasks together. The triage and
+check-in skills lead with decisions. An older deployment does not serve
+`decisions_list`.
+
+Version 0.18.1 removes internal design-record references from the README and
+the account-review skill; behavior is unchanged.
 
 Version 0.18.0 manages counterparty knowledge. `learnings_create` takes
 document types, a playbook step and evidence in one call, and `learnings_get`
@@ -117,7 +131,7 @@ Version 0.17.0 adds drafted answers. `tasks_suggest` saves a resolution for a
 person to approve (the button, the form values, the note, the reasons and the
 evidence) without acting, and `tasks_suggestions` lists the drafts waiting in a
 queue. The triage skill explains when to draft instead of asking a person to
-type an answer. It needs a deployment with ADR-014 (Paperwork bot drafts); an
+type an answer. It needs a deployment that serves Paperwork bot drafts; an
 older deployment does not serve the two tools.
 
 Version 0.16.3 updates how the skills present records: a new shared reference

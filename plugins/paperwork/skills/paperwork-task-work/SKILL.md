@@ -179,6 +179,38 @@ To size an account-wide cohort, call `tasks_summary {"queue": "account"}` (it
 needs account-wide access and counts exactly the tasks you may read).
 `tasks_list` with `queue: account` returns no total; page it with its `cursor`.
 
+### Working A Cohort End To End
+
+For a request such as "give me every credit memo not yet entered, download them
+with a CSV, then close them out with a note that I'm working them":
+
+1. **Find the cohort by kind.** Filter on the task kind with a plan, not text:
+   `tasks_summary` then `tasks_list` with `queue: account` and
+   `plan: {"version":1,"title":"…","where":{"field":"task.kind","type":"string","op":"eq","value":"<kind key>"},"sort":[]}`.
+   The kind key is in `task_kinds_list` or a task's `tasks_get`. Collect each
+   task's `process.reference`; page with `cursor`.
+2. **Read their fields for a CSV.** Call `data_export` with `relation: documents`,
+   `fields: ["reference","process_reference","unique_identifier","extracted_data"]`
+   and `filters: [{"field":"process_reference","op":"in","value":[…up to 100…]}]`.
+   Follow `next_cursor` until `has_more` is false. Build the CSV locally from
+   `extracted_data`; say which columns came from which field.
+3. **Download the files.** Call `attachments_bulk_download` with the same
+   workflow references (up to 100), download every URL within ten minutes into
+   a local folder, keep the original filenames, and request
+   `deferred_references` next. Never paste or store the URLs.
+4. **Show the user what you have** (count, total, CSV and folder path) and the
+   exact write you propose, then get an explicit confirmation for that list.
+5. **Act once per batch.** Prefer answering the tasks with their own action
+   (`tasks_bulk`, `operation: respond`, for example "Entered in AP"): that
+   records the decision on each task and lets each workflow's agent finish.
+   To close workflows yourself instead, call `processes_bulk_update` with
+   `operation: note` (an internal team note on each workflow), then
+   `operation: set_status` with `status: completed` or `cancelled` and a
+   `reason`. Use one `idempotency_key` per call; open tasks on closed
+   workflows are cancelled by Paperwork's cleanup shortly after.
+6. **Verify** a sample with `tasks_get` or `processes_history`, and report every
+   failed item with its reason.
+
 Do not use `tasks_bulk` to apply a triage plan that needs the Paperwork review
 screen. See [safety.md](../paperwork/references/safety.md).
 

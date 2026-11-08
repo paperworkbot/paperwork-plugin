@@ -21,12 +21,38 @@ For a daily, morning, standup, or "what needs attention" report, use
 follows the confirmation rule in
 [Paperwork agent safety](../paperwork/references/safety.md).
 
+## Frame Work As Decisions
+
+Present open work as the decisions it needs, not as tasks one by one. A
+decision is one question that a group of tasks asks; one answer is then
+checked and applied to each task on its own values.
+
+1. Call `decisions_list {}` (a connection made before plugin 0.19.0 may need
+   reconnecting to get it; without it, group with `tasks_report`): open tasks in the user's queue grouped by agent,
+   kind and reason across contacts, the most tasks first, with the count,
+   contacts, unclaimed count and `answered_before` (the usual button and how
+   often it was pressed). `ungrouped_task_count` is the work that needs its
+   own answer.
+2. Lead your report with the decisions: the question, how many tasks, how
+   old, and how the team answered it before. `answered_before` is information,
+   not a recommendation: a queue a person works by design (a manual entry in
+   another system, an approval) stays theirs. A decision with
+   `left_out_reason_untrusted` holds tasks the agent left out of a group the
+   user applied: report the reason, and don't review them again as a group.
+3. To answer one, call `triage_runs_create` with `like_task_reference` set to
+   its `anchor_task_reference` (look-alikes span contacts by default). Paperwork writes
+   one decision from that task and checks every member against it; the user
+   reviews it on the returned `review_url`, where exceptions stay with them.
+4. Draft answers (below) for tasks whose values differ per task and need a
+   person's approval one at a time; on the Decisions page they sit inside
+   their decision.
+
 ## Draft Answers For People
 
 When the user asks you to work through tasks that wait for people, and to
 leave the decisions to them, draft each answer with `tasks_suggest` instead of
 responding. A draft submits nothing: the person sees it on the task, with the
-form filled in, and approves it there or in the Suggested answers queue. Their
+form filled in, and approves it there or on the Decisions page. Their
 approval is their own answer.
 
 1. Read the task with `tasks_get`, its documents with `paperworks_get` and

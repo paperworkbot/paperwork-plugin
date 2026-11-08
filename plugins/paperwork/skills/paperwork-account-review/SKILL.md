@@ -13,8 +13,7 @@ already review: a suggested SOP change, a suggested task kind, a suggested
 change to a contact's notes, or a finding on the Learning page.
 
 Every write follows the one confirmation rule in
-[Paperwork agent safety](../paperwork/references/safety.md). The design is
-ADR-010 in the Paperwork repository.
+[Paperwork agent safety](../paperwork/references/safety.md).
 
 ## Before you start
 

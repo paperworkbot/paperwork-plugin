@@ -21,6 +21,10 @@ it never claims work, changes state, or creates an approval plan.
    `processes_summary` when workflow-level state matters, and `tasks_report`
    or `processes_report` with a day dimension when the report should say how
    new work or completions moved day by day.
+   When `decisions_list` is available, call it and report the backlog as
+   decisions first: each
+   question, how many tasks ask it and how old they are. Name the ones that
+   cover most of the queue.
 3. Use bounded `tasks_list` calls for the cohorts that can change the report:
    overdue or due soon, pending questions, active errors, old role work, and
    old tasks whose workflows are on hold. Keep task state and workflow state

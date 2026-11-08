@@ -250,7 +250,9 @@ public_boundary_patterns = {
       ["/", "home", "/"].join,
       ["C:", "\\", "Users", "\\"].join,
       [".claude", "worktrees", ""].join("/")
-    )
+    ),
+  "an internal design-record number" =>
+    /\bADR-?\d+\b/
 }.freeze
 
 scan_public_boundary = lambda do |label, contents|

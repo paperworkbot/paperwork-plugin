@@ -1,5 +1,5 @@
 version: 1
-plugin_version: "0.18.0"
+plugin_version: "0.19.1"
 dynamic_tools:
   direct_custom_tasks:
     mcp_pattern: "custom_task_*"
@@ -516,6 +516,11 @@ capabilities:
     mode: read
     scope: account
     skills: [paperwork-triage, paperwork-task-work]
+  decisions.list:
+    mcp: decisions_list
+    mode: read
+    scope: account
+    skills: [paperwork-triage, paperwork-check-in]
   tasks.resolve_contact:
     mcp: tasks_resolve_contact
     mode: write

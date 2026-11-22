@@ -31,21 +31,28 @@ checked and applied to each task on its own values.
    reconnecting to get it; without it, group with `tasks_report`): open tasks in the user's queue grouped by agent,
    kind and reason across contacts, the most tasks first, with the count,
    contacts, unclaimed count and `answered_before` (the usual button and how
-   often it was pressed). `ungrouped_task_count` is the work that needs its
-   own answer.
-2. Lead your report with the decisions: the question, how many tasks, how
-   old, and how the team answered it before. `answered_before` is information,
-   not a recommendation: a queue a person works by design (a manual entry in
-   another system, an approval) stays theirs. A decision with
-   `left_out_reason_untrusted` holds tasks the agent left out of a group the
-   user applied: report the reason, and don't review them again as a group.
-3. To answer one, call `triage_runs_create` with `like_task_reference` set to
-   its `anchor_task_reference` (look-alikes span contacts by default). Paperwork writes
-   one decision from that task and checks every member against it; the user
-   reviews it on the returned `review_url`, where exceptions stay with them.
+   often it was pressed), plus `contact_match_groups` for grouped open
+   contact-resolution questions by counterparty. `ungrouped_task_count` is the
+   work that needs its own answer.
+2. Lead your report with the decisions and contact-match groups: the question,
+   how many tasks, how old, and how the team answered it before.
+   `answered_before` is information, not a recommendation: a queue a person
+   works by design (a manual entry in another system, an approval) stays
+   theirs. A decision with `left_out_reason_untrusted` holds tasks the agent
+   left out of a group the user applied: report the reason, and don't review
+   them again as a group.
+3. To answer a classified decision, call `triage_runs_create` with
+   `like_task_reference` set to its `anchor_task_reference` (look-alikes span
+   contacts by default). For a group in `contact_match_groups`, pass `mode:
+   "map"` as well: Paperwork builds the contact-mapping review immediately with
+   no model call, and `triage_runs_prepare_apply` can pin the chosen
+   `contact_reference` in `group_actions`. For an `answer_each` row
+   (unclassified tasks for one counterparty), pass `mode: "instruct"` with the
+   user's `instructions` so each task is evaluated on its own facts.
 4. Draft answers (below) for tasks whose values differ per task and need a
    person's approval one at a time; on the Decisions page they sit inside
-   their decision.
+   their decision. Use `tasks_review_suggestion` when the user wants to approve
+   or dismiss an existing pending draft.
 
 ## Draft Answers For People
 
@@ -80,7 +87,9 @@ approval is their own answer.
 6. Set `confidence: "high"` only when the page plainly prints everything the
    answer rests on. Only high-confidence drafts get one-click Approve in the
    queue; approvals and bank or payment details always open the task.
-7. Use `tasks_suggestions` to see what is already drafted. Report how many
+7. Use `tasks_suggestions` to see what is already drafted. When you read a
+   task and leave it with nothing to add, call `tasks_mark_reviewed` so later
+   passes skip it until it changes. Report how many
    tasks you drafted, how many need a person, and how many asked the wrong
    question, with links.
 
@@ -97,15 +106,19 @@ approval is their own answer.
    `tasks_summary {"state": "on_hold"}` for parked work. To find cohorts, call
    `tasks_report` with `group_by` such as `["agent", "kind", "title_tag"]` and
    `examples: true`: exact counts per group with the oldest date.
-4. Use the same explicit filters for age (`created_before`), due date, agent,
-   role, user, contact, resolution, task type, workflow state, or a text query.
+4. Use the same explicit filters for age (`created_before`), due date (`due`,
+   including `"none"`), agent, role, user, contact, resolution, `task_type`,
+   `task_kind` (or `"none"` for unclassified tasks), `task_reason`, board
+   `list_id`, workflow state, or a text query.
    For anything the workflow's agent extracted (an amount, a counterparty, a code),
    call `fields_list`, then pass `plan` (or `question`) to `tasks_summary` and
    `tasks_list`, with workflow and document conditions inside a `workflow`
    node. See [filter plans](../paperwork-process-management/references/filter-plans.md).
 5. Use `tasks_list` with `sort: "oldest"` for a bounded sample of the cohort.
-   Follow `next_cursor` only while the sample is too small; do not enumerate a
-   large queue merely to count it.
+   Pass `fields: "compact"` when you only need to choose tasks; each row still
+   names its board `list` and its workflow's `process.list`. Follow
+   `next_cursor` only while the sample is too small; do not enumerate a large
+   queue merely to count it.
 6. Call `tasks_present` with the `task_references` of the cohort you want to
    review (at most 25) to see each task's key facts, open actions, and the
    first pages of its paperwork, in one call. Use `pages_per_paperwork` up to 3
@@ -191,8 +204,9 @@ does not authorize it.
    the review screen, or each task's own button when none was saved. To
    choose for the user, pass `group_actions`, keyed by `proposal_id`, each
    with a `kind` (`buttons`, `own_answer`, `reject`, `hold`, `defer`, `note`
-   or `contact`) and its `text`, `user_id` (defer) or `contact_id`
-   (contact). For `buttons`, add `workflows: true` only when the user asked
+   or `contact`) and its `text`, `user_id` or `user_email` (defer), or
+   `contact_reference` such as `CONTACT-123` (contact; `contact_id` is also
+   accepted). For `buttons`, add `workflows: true` only when the user asked
    for the workflow changes the agent planned. Send one only when the user
    stated that exact choice in this request, and validate nothing yourself:
    Paperwork refuses a contact the user may not choose, or a member a defer

@@ -86,14 +86,14 @@ permissions. Keep the default unless the user wants a narrower connection:
 - **"This connection is limited to other agents", or a workflow is not
   found:** the connection has an agent limit that excludes that record.
   Reconnect with a different agent selection if the user needs it.
-- **New tools missing after an upgrade:** an OAuth access token snapshots the
-  registry when issued. Refresh or reconnect, then rediscover tools. Issuance
-  and refresh use the current registry within the connection's access level,
-  subject to current user permissions. Manual tokens instead need explicit
-  capability grants. Same-grant refresh preserves run continuity;
-  fresh authorization may create a new connection. Retain pending run
-  references and resolve continuity before replacing their owning connection.
-  Neither refresh nor reconnect bypasses a role or record-access denial.
+- **New tools missing after an upgrade:** an OAuth consent snapshots the
+  approved capability ceiling when authorized, and token refresh keeps only
+  capabilities within that ceiling (dropping retired ones). To add newly
+  shipped server capabilities, disconnect and authorize again, then rediscover
+  tools. Manual tokens instead need explicit capability grants. If pending
+  custom-task runs exist on the current OAuth grant, finish polling them before
+  replacing the connection. Neither refresh nor reconnect bypasses a role or
+  record-access denial.
 - **Not found on one record:** do not treat this as connection failure; the
   record may be absent or outside the user's authorized view.
 - **Rate limited:** honor `Retry-After`; do not rotate credentials or retry in a

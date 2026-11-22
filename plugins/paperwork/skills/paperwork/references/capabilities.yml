@@ -1,5 +1,5 @@
 version: 1
-plugin_version: "0.19.1"
+plugin_version: "0.20.0"
 dynamic_tools:
   direct_custom_tasks:
     mcp_pattern: "custom_task_*"
@@ -146,6 +146,11 @@ capabilities:
     mode: write
     scope: account
     skills: [paperwork-agent-operations]
+  contacts.review_note_revision:
+    mcp: contacts_review_note_revision
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
   tasks.bulk:
     mcp: tasks_bulk
     mode: write
@@ -186,6 +191,36 @@ capabilities:
     mode: read
     scope: account
     skills: [paperwork-agent-operations, paperwork-task-work]
+  identifier_rules.list:
+    mcp: identifier_rules_list
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations]
+  identifier_rules.get:
+    mcp: identifier_rules_get
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations]
+  identifier_rules.preview:
+    mcp: identifier_rules_preview
+    mode: read
+    scope: account
+    skills: [paperwork-agent-operations]
+  identifier_rules.create:
+    mcp: identifier_rules_create
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  identifier_rules.update:
+    mcp: identifier_rules_update
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
+  identifier_rules.delete:
+    mcp: identifier_rules_delete
+    mode: write
+    scope: account
+    skills: [paperwork-agent-operations]
   sops.create:
     mcp: sops_create
     mode: write
@@ -298,6 +333,11 @@ capabilities:
     skills: [paperwork-process-management]
   processes.set_status:
     mcp: processes_set_status
+    mode: write
+    scope: workflow
+    skills: [paperwork-process-management]
+  processes.snooze:
+    mcp: processes_snooze
     mode: write
     scope: workflow
     skills: [paperwork-process-management]
@@ -421,6 +461,11 @@ capabilities:
     mode: write
     scope: account
     skills: [paperwork-document-management, paperwork-task-work]
+  paperworks.dismiss_duplicates:
+    mcp: paperworks_dismiss_duplicates
+    mode: write
+    scope: account
+    skills: [paperwork-document-management, paperwork-task-work]
   contacts.search:
     mcp: contacts_search
     mode: read
@@ -506,6 +551,11 @@ capabilities:
     mode: read
     scope: account
     skills: [paperwork-task-work]
+  tasks.mark_reviewed:
+    mcp: tasks_mark_reviewed
+    mode: write
+    scope: account
+    skills: [paperwork-triage]
   tasks.suggest:
     mcp: tasks_suggest
     mode: write
@@ -514,6 +564,11 @@ capabilities:
   tasks.suggestions:
     mcp: tasks_suggestions
     mode: read
+    scope: account
+    skills: [paperwork-triage, paperwork-task-work]
+  tasks.review_suggestion:
+    mcp: tasks_review_suggestion
+    mode: write
     scope: account
     skills: [paperwork-triage, paperwork-task-work]
   decisions.list:
@@ -533,6 +588,16 @@ capabilities:
     skills: [paperwork-task-work]
   tasks.set_due_date:
     mcp: tasks_set_due_date
+    mode: write
+    scope: account
+    skills: [paperwork-task-work]
+  tasks.classify:
+    mcp: tasks_classify
+    mode: write
+    scope: account
+    skills: [paperwork-task-work]
+  tasks.delegation:
+    mcp: tasks_delegation
     mode: write
     scope: account
     skills: [paperwork-task-work]

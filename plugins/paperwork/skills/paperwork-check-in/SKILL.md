@@ -16,15 +16,15 @@ it never claims work, changes state, or creates an approval plan.
    needing investigation and `terminal_workflow_errors` as cleanup context;
    `errors` remains the raw total for compatibility.
 2. Call `tasks_summary {}` and `tasks_summary {"queue":"role_queue"}` for
-   backlog age and agent, assignee, and task-type concentration. Role entries
-   carry the role `key`; user entries carry the user `id`. Add
-   `processes_summary` when workflow-level state matters, and `tasks_report`
-   or `processes_report` with a day dimension when the report should say how
-   new work or completions moved day by day.
+   backlog age and agent, assignee, task-type, and `task_kinds` concentration
+   (plus `unclassified_count`). Role entries carry the role `key`; user entries
+   carry the user `id`. Add `processes_summary` when workflow-level state
+   matters, and `tasks_report` or `processes_report` with a day dimension when
+   the report should say how new work or completions moved day by day.
    When `decisions_list` is available, call it and report the backlog as
-   decisions first: each
-   question, how many tasks ask it and how old they are. Name the ones that
-   cover most of the queue.
+   decisions and `contact_match_groups` first: each question or counterparty
+   group, how many tasks ask it, and how old they are. Name the ones that cover
+   most of the queue.
 3. Use bounded `tasks_list` calls for the cohorts that can change the report:
    overdue or due soon, pending questions, active errors, old role work, and
    old tasks whose workflows are on hold. Keep task state and workflow state

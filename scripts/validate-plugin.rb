@@ -26,6 +26,8 @@ end
 claude_manifest_path = PLUGIN.join(".claude-plugin/plugin.json")
 codex_manifest_path = PLUGIN.join(".codex-plugin/plugin.json")
 marketplace_path = ROOT.join(".claude-plugin/marketplace.json")
+changelog_path = ROOT.join("CHANGELOG.md")
+readme_path = ROOT.join("README.md")
 mcp_path = PLUGIN.join(".mcp.json")
 codex_mcp_path = PLUGIN.join(".codex-mcp.json")
 opencode_v1_path = ROOT.join("opencode.example.jsonc")
@@ -36,6 +38,8 @@ required_files = [
   claude_manifest_path,
   codex_manifest_path,
   marketplace_path,
+  changelog_path,
+  readme_path,
   mcp_path,
   codex_mcp_path,
   opencode_v1_path,
@@ -68,6 +72,21 @@ unless marketplace.dig("plugins", 0, "version") == claude_manifest["version"] &&
 end
 unless claude_manifest["version"].to_s.match?(/\A\d+\.\d+\.\d+\z/)
   errors << "manifest version must be a stable semantic version"
+end
+if changelog_path.file?
+  changelog_text = changelog_path.read
+  unless changelog_text.match?(/^## \[#{Regexp.escape(claude_manifest["version"].to_s)}\](?:\s|-\s|\z)/)
+    errors << "CHANGELOG.md must contain a ## [#{claude_manifest["version"]}] section matching the manifests"
+  end
+end
+if readme_path.file?
+  readme_text = readme_path.read
+  if readme_text.match?(/^Version \d+\.\d+\.\d+\b/)
+    errors << "README.md must link to CHANGELOG.md instead of carrying inline Version X.Y.Z release notes"
+  end
+  unless readme_text.include?("(CHANGELOG.md)")
+    errors << "README.md must link to CHANGELOG.md"
+  end
 end
 unless marketplace.dig("plugins", 0, "source") == "./plugins/paperwork"
   errors << "marketplace must point at ./plugins/paperwork"

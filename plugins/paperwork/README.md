@@ -51,15 +51,21 @@ Collaborate.
 
 ### Read (`read` tier)
 
-Account discovery, check-ins, relationship review, document lookup, workflow
-history, upload progress, bounded document reading, and downloads:
+Account discovery, check-ins, decisions, relationship review, reports, document
+lookup, workflow history, upload progress, bounded document reading, and
+downloads:
 
-`account.describe`, `account.snapshot`, `fields.list`, `context.get`, `records.lookup`,
-`tasks.summary`, `tasks.list`, `tasks.get`, `tasks.precedents`,
+`account.describe`, `account.snapshot`, `account.settings`, `fields.list`,
+`context.get`, `records.lookup`, `decisions.list`, `tasks.summary`,
+`tasks.report`, `tasks.list`, `tasks.present`, `tasks.get`, `tasks.precedents`,
+`tasks.suggestions`, `tasks.kinds`, `task_kinds.list`, `task_kinds.get`,
 `triage_runs.get`, `contacts.search`, `contacts.lookup`, `contacts.get`,
-`processes.search`, `processes.summary`, `processes.history`,
-`processes.await`, `boards.list`, `agents.list`, `agents.get`, `sops.list`,
-`sops.get`, `learnings.list`, `learnings.get`, `translations.list`, `paperworks.search`,
+`contacts.summary`, `processes.search`, `processes.summary`, `processes.report`,
+`processes.history`, `processes.await`, `boards.list`, `agents.list`,
+`agents.get`, `sops.list`, `sops.get`, `identifier_rules.list`, `identifier_rules.get`,
+`identifier_rules.preview`, `instructions.search`,
+`instructions.history`, `learnings.list`, `learnings.get`, `translations.list`,
+`paperworks.search`, `paperworks.summary`, `paperworks.present`,
 `paperworks.get`, `paperworks.find_by_identifier`, `paperworks.lookup`,
 `paperworks.query_rows`, `paperworks.read`, `paperworks.pages`,
 `paperworks.download`, `attachments.get`, `attachments.download`, and
@@ -70,11 +76,12 @@ history, upload progress, bounded document reading, and downloads:
 Read plus the reversible writes that need only the user's request:
 
 `tasks.note`, `tasks.claim`, `tasks.hold`, `tasks.resume`,
-`tasks.set_due_date`, `tasks.review_decision`, `processes.note`,
-`processes.update_metadata`, `processes.assign_list`, `boards.move_item`,
-`boards.create_list`, `boards.update_list`, `boards.reorder_lists`,
-`contacts.assign_role`, `learnings.suggest` (inactive until an agent editor
-accepts it), `triage_runs.create` (queues hosted analysis), and
+`tasks.set_due_date`, `tasks.classify`, `tasks.review_decision`,
+`tasks.suggest`, `tasks.mark_reviewed`, `processes.note`, `processes.update_metadata`,
+`processes.assign_list`, `boards.move_item`, `boards.create_list`,
+`boards.update_list`, `boards.reorder_lists`, `contacts.assign_role`,
+`learnings.suggest` (inactive until an agent editor accepts it),
+`triage_runs.create` (queues hosted analysis), and
 `triage_runs.prepare_apply`.
 
 ### Work (`work` tier)
@@ -83,29 +90,36 @@ Collaborate plus the material, terminal, outward-facing, and bulk writes. The
 agent confirms the exact targets and effect before each of these:
 
 `tasks.respond`, `tasks.answer_question`, `tasks.resolve_contact`,
-`tasks.defer` (emails the new assignee), `tasks.bulk`,
-`processes.create`, `processes.message` (wakes the agent),
-`processes.retry_agent` (wakes the agent), `processes.set_status`,
+`tasks.review_suggestion`, `tasks.delegation`, `tasks.defer` (emails the new
+assignee), `tasks.bulk`, `processes.create`, `processes.message` (wakes the
+agent), `processes.retry_agent` (wakes the agent), `processes.set_status`, `processes.snooze`,
 `processes.assign_user`, `processes.bulk_update`, `boards.delete_list`,
-`paperworks.update_field`, `paperworks.set_status`, `paperworks.reprocess`,
-`attachments.upload`, `contacts.create` and `contacts.update` (contact
-instructions included; the agent shows the exact text first), and
-`triage_runs.apply`.
+`paperworks.update_field`, `paperworks.approve_extracted_data`,
+`paperworks.dismiss_duplicates`, `paperworks.set_status`,
+`paperworks.reprocess`, `attachments.upload`, `contacts.create` and
+`contacts.update` (contact instructions included; the agent shows the exact
+text first), and `triage_runs.apply`.
 
 ### Setup (`setup` tier, the default)
 
-Work plus the writes that change what hosted agents are told on later runs.
-Each needs the same role the user needs to make the edit in the UI, and the
-agent shows the user the full new text first:
+Work plus the writes that change what hosted agents are told on later runs or
+submit account-review proposals. Each needs the same role the user needs to
+make the edit in the UI, and the agent shows the user the full new text or
+exact configuration first:
 
 `agents.update_instructions`, `sops.create`, `sops.update`, `sops.attach`,
-`sops.detach`, `sops.archive`, `learnings.create`, `learnings.update`,
-`learnings.review`, and `learnings.review_sop_change` (accepting a suggested
-SOP change writes a new version of the agent's instructions, so the agent
-shows every edit as a diff first), `translations.create` and
-`translations.review` (how matching reads a contact's values), and
-`contacts.set_attribute` and `contacts.review_attribute` (a contact's typed
-business facts, which reach every later prompt for that contact).
+`sops.detach`, `sops.archive`, `identifier_rules.create`, `identifier_rules.update`,
+`identifier_rules.delete`, `task_kinds.create`, `task_kinds.update`,
+`task_kinds.archive`, `task_kinds.dismiss_suggestion`, `task_kinds.classify`,
+`learnings.create`, `learnings.update`, `learnings.review`,
+`learnings.review_sop_change` (accepting a suggested SOP change writes a new
+version of the agent's instructions, so the agent shows every edit as a diff
+first), `translations.create` and `translations.review` (how matching reads a
+contact's values), `contacts.set_attribute`, `contacts.review_attribute` (a
+contact's typed business facts, which reach every later prompt for that
+contact), `contacts.review_note_revision` (accepting or dismissing a proposed
+rewrite of a contact's notes), and `reviews.submit` (submitting proposals that
+wait for people to decide).
 
 ### Account data analysis and export
 

@@ -72,10 +72,12 @@ confirmation rule in [Paperwork agent safety](../paperwork/references/safety.md)
   `admin_note: true` only when the user explicitly wants the agent to receive
   context without an instruction to act.
 - **Poke the agent:** use `processes_retry_agent` when the user asks the agent
-  to take another turn now. It changes no state, but the agent may act. Like
-  the workflow page's poke, it does not lift a stop request: when the result
-  has `stop_requested: true`, tell the user the turn waits. A new message
-  resumes a stopped workflow.
+  to take another turn now. It changes no state, but the agent may act. Account
+  administrators can pass `wake_platform_hold: true` to release an active
+  platform-failure hold at the same time. Like the workflow page's poke, it
+  does not lift a user stop request: when the result has `stop_requested:
+  true`, tell the user the turn waits. A new message resumes a stopped
+  workflow.
 - **Assign a person:** use `processes_assign_user` with a user ID from
   `account_describe`, `me`, or `agent`. A person gets the workflow on hold for
   them. `agent` reopens it and wakes the agent.
@@ -97,6 +99,7 @@ confirmation rule in [Paperwork agent safety](../paperwork/references/safety.md)
 - **Task kinds:** when the user needs the available classifications for this
   workflow, use the read-only `tasks_kinds` tool. Follow `next_after_key` with
   `after_key` for more results; `key` returns one kind's full instructions.
+- **Snooze:** use `processes_snooze` with `until` and an `instruction` to hold a workflow until a time and then wake its agent. It wakes earlier if new mail or paperwork arrives. `processes_set_status` with `open` wakes it now.
 - **State:** use `processes_set_status`, which acts like the workflow page:
   - `on_hold` holds the workflow, and assigns it to you when nobody owns it;
   - `open` clears the owner and wakes the agent;
@@ -126,8 +129,9 @@ tells you to proceed anyway, repeat the same call once with
    takes the card off the board.
 3. **Move a workflow to another board:** `processes_assign_list` with the
    destination `list_id`.
-4. **Edit columns:** `boards_create_list`, `boards_update_list` (name, color,
-   emoji), and `boards_reorder_lists` with every list id in the new order.
+4. **Edit columns:** `boards_create_list`, `boards_update_list` (name,
+   description, color, emoji), and `boards_reorder_lists` with every list id in
+   the new order.
 5. **Delete a column:** `boards_delete_list` takes its cards off the board
    (they are not deleted). This is a material write; name the column and the
    cards it holds, and get a confirmation.

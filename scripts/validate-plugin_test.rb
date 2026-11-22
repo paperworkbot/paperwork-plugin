@@ -67,4 +67,26 @@ class ValidatePluginTest < Minitest::Test
       assert_includes stderr, "between one and three default prompts"
     end
   end
+
+  def test_rejects_missing_current_version_in_changelog_or_inline_readme_changelog
+    Dir.mktmpdir("paperwork-plugin-validation") do |directory|
+      distribution = File.join(directory, "distribution")
+      FileUtils.cp_r(ROOT, distribution)
+      version = JSON.parse(File.read(File.join(distribution, "plugins/paperwork/.codex-plugin/plugin.json"))).fetch("version")
+      changelog = File.join(distribution, "CHANGELOG.md")
+      File.write(changelog, File.read(changelog).sub("## [#{version}]", "## [0.0.1]"))
+      readme = File.join(distribution, "README.md")
+      File.write(readme, "#{File.read(readme)}\nVersion #{version} adds inline notes.\n")
+
+      _stdout, stderr, status = Open3.capture3(
+        RbConfig.ruby,
+        File.join(distribution, "scripts/validate-plugin.rb"),
+        chdir: distribution
+      )
+
+      refute status.success?
+      assert_includes stderr, "CHANGELOG.md must contain a ## [#{version}] section"
+      assert_includes stderr, "README.md must link to CHANGELOG.md instead of carrying inline"
+    end
+  end
 end

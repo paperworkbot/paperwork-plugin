@@ -113,11 +113,11 @@ After authorization, upload one bounded file at a time and verify attachment
 and paperwork state through `attachments_get`, then `paperworks_get` when
 `ready_for_read` is true.
 
-## Correct An Extracted Value
+## Correct Or Delete An Extracted Value
 
-`paperworks_update_field` edits one extracted field, the same correction the
-document view offers. It exists so a wrong extraction can be fixed in place
-instead of forcing a full reprocess.
+`paperworks_update_field` edits or deletes one extracted field or array element,
+the same correction the document view offers. It exists so a wrong extraction
+can be fixed in place instead of forcing a full reprocess.
 
 1. Establish the true value from the source first: the page image
    (`paperworks_pages` with `include_images: true`), the text variant, or the
@@ -126,13 +126,25 @@ instead of forcing a full reprocess.
    for a nested value. A field that does not already exist is refused, not
    created: check the exact key in the dossier's extracted data rather than
    guessing at a plausible name. Pass `create: true` only when adding a field
-   is what you actually mean.
+   is what you actually mean, or `delete: true` (without `value` or `create`)
+   when removing a spurious extracted field or line.
 3. `reason` is required and is written to the workflow timeline alongside the
-   old and new values, so state what you checked and where.
-4. Confirm the exact reference, path, old value, and new value before writing.
+   change, so state what you checked and where.
+4. Confirm the exact reference, path, old value, and new value (or deletion)
+   before writing.
 
 Prefer `paperworks_reprocess` when many fields are wrong or the document was
-misread as a whole; use `update_field` for a specific, verified correction.
+misread as a whole; use `paperworks_update_field` for a specific, verified
+correction.
+
+## Dismiss False-Positive Duplicates
+
+When a document shows flagged duplicate copies that you verified are distinct
+documents (not copies of the same paperwork), confirm the exact references with
+the user and call `paperworks_dismiss_duplicates` (with optional
+`duplicate_references` to dismiss a subset). Dismissing remembers the pair so
+duplicate detection leaves it alone and releases any duplicate-copy wait on the
+workflow.
 
 ## Approve Extracted Data
 

@@ -1,6 +1,6 @@
 ---
 name: paperwork-agent-operations
-description: Edit contact profiles, workflow details, agent system instructions, standard operating procedures, SOP assignments, task kinds, reviewed contact learnings, contact translations, typed contact facts, and suggested changes to an agent's SOP through discovered Paperwork MCP tools, and review how an account runs with exact reports and instruction search before proposing changes.
+description: Edit contact profiles, workflow details, agent system instructions, standard operating procedures, SOP assignments, identifier rules, task kinds, reviewed contact learnings, contact translations, typed contact facts, and suggested changes to an agent's SOP through discovered Paperwork MCP tools, and review how an account runs with exact reports and instruction search before proposing changes.
 ---
 
 # Contact, Workflow, Agent Guidance, And Learning Edits
@@ -99,14 +99,23 @@ user wants to review a cohort in Paperwork.
 
 ## Contact profiles
 
-- Resolve existing contacts with `contacts_lookup` or `contacts_search`.
-  Lookup is local and read-only; it does not import or create a contact.
-- Use `contacts_get` for the editable profile, the `externally_managed` flag,
-  and the `version`. Pass that value as `expected_version` on update.
+- Resolve existing contacts with `contacts_lookup` (searches display name,
+  company name, aliases, account number, email, email domain, external ID, or
+  reference, and reports inactive matches so they can be reactivated) or
+  `contacts_search` (searches or browses by reference, display or company name,
+  alternate names, email, account number, or external ID, with `status`,
+  `classification`, and `cursor` paging). Lookup is local and read-only; it
+  does not import or create a contact.
+- Use `contacts_get` for the profile, `contact_status`,
+  `contact_classification`, `external_id`, `contact_methods`, the
+  `externally_managed` flag, `business_attributes`, any proposed
+  `note_revision`, and the `version`. Pass `version` as `expected_version` on
+  update.
 - Use `contacts_create` or `contacts_update` only when the user asked for that
   profile work, and confirm the exact attributes. Send only advertised
-  `attributes`. Payment details, roles, and configuration are not editable
-  here.
+  `attributes` (including `contact_status` to verify or reactivate a contact
+  or mark it inactive, and `contact_classification`). Payment details and
+  workflow roles are not editable here.
 - Contact instructions (`custom_instructions`, at most 2,000 characters) are
   editable when the user can edit contacts in the UI. They reach every later
   agent prompt for that contact, so show the user the exact new text and get
@@ -119,8 +128,15 @@ user wants to review a cohort in Paperwork.
   The change is audited under the user. When the user wants an agent
   editor to review a rule first, use `learnings_suggest` from a workflow with
   that contact instead.
-- Externally managed profiles refuse updates. Do not work around this by
-  duplicating the contact.
+- When `contacts_get` includes a proposed `note_revision` (drafted by a
+  learning or account review), show every edit as a diff and confirm with the
+  user before calling `contacts_review_note_revision` with `accept` or
+  `dismiss` (passing `confirm_new_values` if an account review flagged new
+  values).
+- Externally managed profiles keep their identity fields read-only in Paperwork
+  while allowing operational fields (`custom_instructions`, `contact_status`,
+  and `contact_classification`). Do not duplicate an externally managed contact
+  to change its identity; update identity in the external directory.
 - Read the profile back after a write. Profile writes index search and record
   an audit entry; they do not start hosted AI.
 
@@ -168,6 +184,30 @@ user wants to review a cohort in Paperwork.
    `unchanged` and does not check the timestamp, so a retry is safe.
 5. `sops_archive` is refused while an active agent still follows the SOP;
    detach it first.
+
+## Identifier rules
+
+An identifier rule names a value on paperwork (an order number): Paperwork
+shows it on the document, finds documents by it, and, when the rule has a
+link, links it to its page in another system. Only an account administrator
+on their own connection can preview or change one.
+
+1. Call `identifier_rules_list` to see the account's rules and their `key`s.
+2. Before creating, call `identifier_rules_preview` with `label` and
+   `source_path`. For a link, add `example_url`: a real link for one value,
+   copied from the other system. The result has the `template` worked out
+   from it and each recent value with whether it `matches` and the `url` it
+   would get. Show the user that list. Write `{value}` into a `template`
+   yourself only when the link does not contain a recent value.
+3. Call `identifier_rules_create` with the same arguments once the user agrees.
+4. To change one, read it with `identifier_rules_get` and call
+   `identifier_rules_update` with its `version` as `expected_version`. For a
+   rule with a link, name the host when you confirm: it is where the
+   account's people will be sent.
+5. To remove one, confirm the rule by name, then call
+   `identifier_rules_delete` with its `key`.
+6. To find documents by a rule's value, call `paperworks_find_by_identifier`
+   with `identifier_rule` set to its `key`.
 
 ## Learnings
 

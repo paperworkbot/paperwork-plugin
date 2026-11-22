@@ -97,79 +97,13 @@ create the token there, and limit it to the agents it serves.
 | `paperwork-agent-operations` | Edits contacts, workflow details, agent instructions, SOPs, assignments, and reviewed learnings with version checks |
 | `paperwork-account-review` | Reviews how an account's agents worked from exact reports and submits proposals that wait for people (`reviews_submit`) |
 
-The source package is version **0.19.1**. Its skills cover the fixed capability
+The source package is version **0.20.0**. Its skills cover the fixed capability
 catalog plus opt-in direct custom-task tools through live discovery.
 It does not create agents or change their model, runtime, tool, integration,
 secret, or arbitrary-code configuration.
 
-Version 0.19.1 adds a recipe for working a cohort end to end in the task-work
-skill: find tasks by kind with a filter plan, export their documents' fields for
-a CSV, download their files, and answer or close them in one confirmed batch.
-
-Version 0.19.0 frames open work as decisions. `decisions_list` groups the
-open tasks in the user's queue by agent, kind and reason across contacts, with
-counts and the usual earlier answer, and `triage_runs_create` takes
-`across_contacts` to review one decision's tasks together. The triage and
-check-in skills lead with decisions. An older deployment does not serve
-`decisions_list`.
-
-Version 0.18.1 removes internal design-record references from the README and
-the account-review skill; behavior is unchanged.
-
-Version 0.18.0 manages counterparty knowledge. `learnings_create` takes
-document types, a playbook step and evidence in one call, and `learnings_get`
-returns every field with the workflows it reached. `translations_list`,
-`translations_create` and `translations_review` manage how a counterparty
-writes a value and what we call it, and `contacts_update` can append to or
-replace part of a contact's instructions with `instructions_edit`.
-`contacts_set_attribute` and `contacts_review_attribute` set, confirm and reject
-a contact's typed business facts (payment terms, currency, PO rule and the
-like), and `contacts_get` lists them. An older deployment does not serve the
-translation or business-fact tools.
-
-Version 0.17.0 adds drafted answers. `tasks_suggest` saves a resolution for a
-person to approve (the button, the form values, the note, the reasons and the
-evidence) without acting, and `tasks_suggestions` lists the drafts waiting in a
-queue. The triage skill explains when to draft instead of asking a person to
-type an answer. It needs a deployment that serves Paperwork bot drafts; an
-older deployment does not serve the two tools.
-
-Version 0.16.3 updates how the skills present records: a new shared reference
-(`presentation.md`) tells the agent to lead with a task's or workflow's title,
-name contacts and actions, and put the reference after the name instead of
-numbering results. The wording changes only; no tool payload changes and no new
-capability is needed. Update an existing plugin install to get it.
-
-Version 0.16.2 updates the agent-operations skill: `tasks.report` with
-`health: true` shows each task kind's last 30 days and open queue. It needs a
-deployment at v0.29.0 or later. No new capability is needed; update an existing
-plugin install.
-
-Version 0.16.1 updates the triage skill for grouped reviews: how look-alike
-tasks are grouped, Map to contact, and the `group_actions` choices that
-`triage_runs_prepare_apply` accepts. Without a choice, a task that still asks
-who its contact is refuses the default button. It needs a deployment at
-v0.27.0 or later (the document-matched supplier rule it describes needs
-v0.28.0). No new capability is needed; update an existing plugin
-install.
-
-Version 0.16.0 adds guidance for filtering workflows and tasks on the fields
-that agents extract. The skills call `fields.list` to find those fields, then
-apply a filter plan or a plain-language question. Summary reports group and
-summarize the matching records. Use a compatible Paperwork deployment with the
-`fields.list` MCP capability enabled, update an existing plugin install, and
-reauthorize the MCP connection if `fields.list` is missing. Existing permission
-and write confirmation rules still apply.
-
-Version 0.15.0 adds guidance for task review tiles, document previews without
-an associated task, and exact intake summaries. Review tiles can include
-verification signals and bounded precedent examples when the connection has
-the required grants. Use a compatible Paperwork deployment with these MCP
-capabilities enabled, update an existing plugin install, and reauthorize the
-MCP connection if the new tools are missing. Existing permission and write
-confirmation rules still apply.
-
-See [`plugins/paperwork/README.md`](plugins/paperwork/README.md) for capability
+See [`CHANGELOG.md`](CHANGELOG.md) for release history and
+[`plugins/paperwork/README.md`](plugins/paperwork/README.md) for capability
 profiles, safety boundaries, updates, and removal.
 
 The stable install identifier remains `paperwork`, so existing

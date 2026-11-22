@@ -61,7 +61,8 @@ Every Paperwork write belongs to one tier.
 | `tasks_note`, `processes_note` | Adds a record; changes no state |
 | `tasks_claim`, `tasks_hold`, `tasks_resume` | Changes assignment or pauses; can be undone |
 | `tasks_set_due_date` | Changes a date and its reminders; can be set again |
-| `tasks_review_decision` | Records one guided-review item; `clear` removes it |
+| `tasks_classify` | Files a task under an account task kind or clears its kind; can be set again |
+| `tasks_review_decision` | Records, clears, or rebuilds guided-review items before completion |
 | `boards_move_item`, `processes_assign_list` | Board moves |
 | `boards_create_list`, `boards_update_list`, `boards_reorder_lists` | Board layout |
 | `processes_set_status` to `on_hold` | Holds the workflow; takes ownership when nobody owns it |
@@ -79,7 +80,9 @@ Every Paperwork write belongs to one tier.
 | --- | --- |
 | `tasks_respond` | Performs a task action; complete, reject, and cancel are terminal |
 | `tasks_answer_question` | Answers the workflow's question; the agent continues from it |
-| `tasks_resolve_contact` | Settles a contact-match task; may create a contact. With `new_contact_custom_instructions`, show the exact instructions text: it reaches every later agent prompt for that contact |
+| `tasks_resolve_contact` | Settles a contact-match task; may create, verify, or reactivate a contact or save a trusted sender. With `new_contact_custom_instructions`, show the exact instructions text: it reaches every later agent prompt for that contact |
+| `tasks_review_suggestion` | Approves (submits as your own answer) or dismisses a drafted task resolution |
+| `tasks_delegation` | Creates a delegated handoff subtask (optionally emailing the assignee) or approves, rejects, or requests clarification on a delegated submission |
 | `tasks_defer` | Hands the task to another person and emails them |
 | `processes_create` | Starts a workflow; an opening message starts an agent turn |
 | `processes_message` | Wakes the agent, which takes a turn and may act |
@@ -89,7 +92,9 @@ Every Paperwork write belongs to one tier.
 | `processes_assign_user` with another user | Moves the workflow onto that person's queue |
 | `processes_assign_user` with `agent` | Reopens the workflow and wakes the agent |
 | `boards_delete_list` | Deletes a column; its cards fall off the board |
-| `paperworks_update_field` | Changes extracted data that later decisions use |
+| `paperworks_update_field` | Changes or deletes extracted data that later decisions use |
+| `paperworks_approve_extracted_data` | Signs off on the inspected extracted values of a document |
+| `paperworks_dismiss_duplicates` | Dismisses readable duplicate flags on a document and releases any duplicate-copy wait |
 | `paperworks_set_status` | Opens, closes, or resolves a document |
 | `paperworks_reprocess` | Queues processing and extraction again |
 | `attachments_upload` | Adds a file and starts processing |
@@ -108,19 +113,25 @@ confirmation.
 ### Setup: confirm the full new text
 
 `agents_update_instructions`, `sops_create`, `sops_update`, `sops_attach`,
-`sops_detach`, `sops_archive`, `learnings_create`, `learnings_update`,
-`learnings_review`, and `learnings_review_sop_change` change what hosted agents
-are told on later runs; `translations_create` and `translations_review` change
-how matching reads a contact's values; `contacts_set_attribute` and
+`sops_detach`, `sops_archive`, `identifier_rules_create`, `identifier_rules_update`,
+`identifier_rules_delete`, `task_kinds_create`, `task_kinds_update`,
+`task_kinds_archive`, `task_kinds_dismiss_suggestion`, `task_kinds_classify`,
+`learnings_create`, `learnings_update`, `learnings_review`, and
+`learnings_review_sop_change` change what hosted agents are told on later runs
+or how open work is classified; `translations_create` and `translations_review`
+change how matching reads a contact's values; `contacts_set_attribute` and
 `contacts_review_attribute` change the typed facts every later prompt for a
-contact carries. They are available whenever the user's roles allow the
-same edit in the Paperwork UI and the connection was not narrowed to a smaller
-access level. Show the user the complete new text or the exact assignment
-(for a suggested SOP change, every edit as a diff; for a translation, the
-contact, field, kind and both values; for a contact fact, the contact, fact
-and value), then get an explicit confirmation. Contact instructions
-(`custom_instructions` or `instructions_edit` on `contacts_create` or
-`contacts_update`) follow the same rule: show the exact text before the write.
+contact carries; `contacts_review_note_revision` accepts or dismisses a
+proposed rewrite of a contact's notes; and `reviews_submit` submits account
+review proposals for people to decide. They are available whenever the user's
+roles allow the same edit in the Paperwork UI and the connection was not
+narrowed to a smaller access level. Show the user the complete new text,
+proposals, or exact assignment (for a suggested SOP or contact-note change,
+every edit as a diff; for a translation, the contact, field, kind and both
+values; for a contact fact, the contact, fact and value), then get an explicit
+confirmation. Contact instructions (`custom_instructions` or
+`instructions_edit` on `contacts_create` or `contacts_update`) follow the same
+rule: show the exact text before the write.
 
 ## Triage Plans Stay On Their Path
 
